@@ -1,0 +1,321 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Firebase Push Notification\n"
+"POT-Creation-Date: 2022-07-05 15:34+0200\n"
+"PO-Revision-Date: 2022-07-05 15:34+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sr_RS\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: push-notification-fcm.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: admin/Devices.php:2
+msgid "All Registered Devices"
+msgstr ""
+
+#: admin/Devices.php:5 admin/Devices.php:7 push-notification-fcm.php:164
+msgid "Search Devices"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: admin/Settings.php:2
+msgid "Firebase Push Notification"
+msgstr ""
+
+#: includes/Devices.php:27
+msgid "Enable Device"
+msgstr ""
+
+#: includes/Devices.php:28
+msgid "Disable Device"
+msgstr ""
+
+#: includes/Devices.php:29
+msgid "Delete"
+msgstr "Избришите"
+
+#: includes/Devices.php:201
+msgid "Nope! Security check failed!"
+msgstr ""
+
+#: includes/Devices.php:268
+msgid "Device Key"
+msgstr ""
+
+#: includes/Devices.php:269
+msgid "Email"
+msgstr "Email"
+
+#: includes/Devices.php:270 push-notification-fcm.php:195
+#: push-notification-fcm.php:196 push-notification-fcm.php:210
+msgid "Subscription"
+msgstr ""
+
+#: includes/Devices.php:271
+msgid "Device Name"
+msgstr ""
+
+#: includes/Devices.php:272
+msgid "OS Version"
+msgstr ""
+
+#: includes/Devices.php:273
+msgid "Subscribed"
+msgstr ""
+
+#: includes/Devices.php:334
+msgid "Select Device"
+msgstr ""
+
+#: includes/Devices.php:344
+msgid "Disabled"
+msgstr "Онемогућен"
+
+#: includes/Metabox.php:23
+msgid "Push Notification"
+msgstr ""
+
+#: includes/Metabox.php:51
+msgid "Send notification on post publish"
+msgstr ""
+
+#: includes/Metabox.php:54
+msgid "Select the subscription you want to notify"
+msgstr ""
+
+#: includes/Metabox.php:62
+msgid "There are currently no registered subscriptions"
+msgstr ""
+
+#: includes/REST.php:87 includes/REST.php:192
+msgid "REST API key is not valid"
+msgstr ""
+
+#: includes/REST.php:97
+msgid "Email address is not valid"
+msgstr ""
+
+#: includes/REST.php:107 includes/REST.php:202
+msgid "There is an error in the token you sent"
+msgstr ""
+
+#: includes/REST.php:116 includes/REST.php:179 includes/Settings.php:208
+msgid "Device token registered"
+msgstr ""
+
+#: includes/REST.php:146
+msgid "Not able to subscribe"
+msgstr ""
+
+#: includes/REST.php:168
+msgid "Device is not saved"
+msgstr ""
+
+#: includes/REST.php:214 includes/Settings.php:240
+msgid "The device token was successfully removed"
+msgstr ""
+
+#: includes/REST.php:221
+msgid "No device token found"
+msgstr ""
+
+#: includes/Settings.php:29
+msgid "Firebase Server (API) Settings"
+msgstr ""
+
+#: includes/Settings.php:36
+msgid "Server (API) Key"
+msgstr ""
+
+#: includes/Settings.php:46
+msgid "Plugin settings"
+msgstr "Подешавање додатка"
+
+#: includes/Settings.php:53
+msgid "REST API Key"
+msgstr ""
+
+#: includes/Settings.php:63
+msgid "Enable in Post Types"
+msgstr ""
+
+#: includes/Settings.php:70
+msgid "Choose Post Types"
+msgstr ""
+
+#: includes/Settings.php:80
+msgid "REST API Endpoints"
+msgstr ""
+
+#: includes/Settings.php:87
+msgid "Subscribe"
+msgstr ""
+
+#: includes/Settings.php:95
+msgid "Unsubscribe"
+msgstr "Отказивање претплате"
+
+#: includes/Settings.php:111
+msgid ""
+"An API key is a unique string that's used to route requests to your Firebase "
+"project when interacting with Firebase and Google services."
+msgstr ""
+
+#: includes/Settings.php:135
+msgid "Important settings for this plugin."
+msgstr ""
+
+#: includes/Settings.php:169
+msgid ""
+"In order to be able to send push notifications, you need to record the "
+"device ID in the site's database. Therefore, you have 2 REST endpoints to "
+"subscribe the device ID during app installation or unsubscribe the device ID "
+"during app deletion."
+msgstr ""
+
+#: includes/Settings.php:193 includes/Settings.php:228
+msgid "Parameters:"
+msgstr ""
+
+#: includes/Settings.php:194 includes/Settings.php:229
+msgid "(required)"
+msgstr "(obavezno)"
+
+#: includes/Settings.php:195
+msgid "(optional)"
+msgstr "(опционо)"
+
+#: includes/Settings.php:196
+msgid ""
+"This would be the category in which the device is registered, if there is no "
+"category exists in WordPress it’ll be created automatically."
+msgstr ""
+
+#: includes/Settings.php:207 includes/Settings.php:239
+msgid "Returns:"
+msgstr ""
+
+#: includes/Settings.php:253
+msgid "Allow notifications in selected post types"
+msgstr ""
+
+#: push-notification-fcm.php:119 push-notification-fcm.php:120
+msgid "FCM Push Notification"
+msgstr ""
+
+#: push-notification-fcm.php:130 push-notification-fcm.php:131
+#: push-notification-fcm.php:157
+msgid "Devices"
+msgstr ""
+
+#: push-notification-fcm.php:140 push-notification-fcm.php:141
+#: push-notification-fcm.php:194 push-notification-fcm.php:209
+msgid "Subscriptions"
+msgstr "Претплате"
+
+#: push-notification-fcm.php:158
+msgid "Device"
+msgstr ""
+
+#: push-notification-fcm.php:159 push-notification-fcm.php:160
+msgid "Add New Device"
+msgstr ""
+
+#: push-notification-fcm.php:161
+msgid "Edit Device"
+msgstr ""
+
+#: push-notification-fcm.php:162
+msgid "New Device"
+msgstr ""
+
+#: push-notification-fcm.php:163
+msgid "View Device"
+msgstr ""
+
+#: push-notification-fcm.php:165
+msgid "No Device Found"
+msgstr ""
+
+#: push-notification-fcm.php:166
+msgid "No Device Found in Trash"
+msgstr ""
+
+#: push-notification-fcm.php:168
+msgid "Device Image"
+msgstr ""
+
+#: push-notification-fcm.php:169
+msgid "Select Device Image"
+msgstr ""
+
+#: push-notification-fcm.php:170
+msgid "Remove Device Image"
+msgstr ""
+
+#: push-notification-fcm.php:171
+msgid "Use Device Image"
+msgstr ""
+
+#: push-notification-fcm.php:172
+msgid "Insert Into Device"
+msgstr ""
+
+#: push-notification-fcm.php:197
+msgid "All Subscription"
+msgstr ""
+
+#: push-notification-fcm.php:198
+msgid "Edit Subscription"
+msgstr ""
+
+#: push-notification-fcm.php:199
+msgid "View Subscription"
+msgstr ""
+
+#: push-notification-fcm.php:200
+msgid "Update Subscription"
+msgstr ""
+
+#: push-notification-fcm.php:201
+msgid "Add New Subscription"
+msgstr ""
+
+#: push-notification-fcm.php:202
+msgid "New Subscription Name"
+msgstr ""
+
+#: push-notification-fcm.php:203 push-notification-fcm.php:204
+msgid "Parent Subscription"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/push-notification-fcm/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Firebase Cloud Messaging (FCM) to iOS and Android when content is published "
+"or updated."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Ivijan-Stefan Stipić"
+msgstr "Ивијан-Стефан Стипић"
+
+#. Author URI of the plugin/theme
+msgid "https://profiles.wordpress.org/ivijanstefan/"
+msgstr "https://profiles.wordpress.org/ivijanstefan/"
