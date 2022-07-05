@@ -10,6 +10,84 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 	private static $run;
 	private function __construct(){
 		add_action( 'admin_init', [&$this, 'register_settings'], 10, 0 );
+		add_action( 'admin_menu', [&$this, 'admin_menu'], 90, 1 );
+		add_action( 'admin_footer', [&$this, 'admin_footer'] );
+	}
+	
+	/*
+     * Fix admin menus
+	 */
+	public function admin_footer () {
+		if( in_array('fcmpn-subscriptions', [$_GET['taxonomy'] ?? NULL]) ) : ?>
+<script>(function($){
+	$('#menu-posts')
+		.removeClass('wp-menu-open open-if-no-js wp-has-current-submenu')
+		.addClass('wp-not-current-submenu')
+		.find('.wp-menu-open')
+		.removeClass('wp-menu-open open-if-no-js wp-has-current-submenu')
+		.addClass('wp-not-current-submenu');
+	
+	$('#toplevel_page_push-notification-fcm')
+		.addClass('wp-has-current-submenu wp-menu-open')
+		.removeClass('wp-not-current-submenu')
+		.find(' > a')
+		.addClass('wp-has-current-submenu wp-menu-open')
+		.removeClass('wp-not-current-submenu')
+		.closest('#toplevel_page_push-notification-fcm')
+		.find('.wp-submenu.wp-submenu-wrap > li:nth-child(4)')
+		.addClass('current')
+		.find('a')
+		.addClass('current');
+}(jQuery||window.jQuery));</script>
+		<?php endif; }
+	
+	/*
+     * Register admin menus
+	 */
+	public function admin_menu () {
+		add_menu_page(
+			__( 'FCM Push Notification', 'fcmpn' ),
+			__( 'FCM Push Notification', 'fcmpn' ),
+			'manage_options',
+			'push-notification-fcm',
+			[ &$this, 'settings' ],
+			'dashicons-rest-api',
+			3
+		);
+		
+		add_submenu_page(
+			'push-notification-fcm',
+			__( 'Devices', 'fcmpn' ),
+			__( 'Devices', 'fcmpn' ),
+			'manage_options',
+			'push-notification-fcm-devices',
+			[ &$this, 'devices' ],
+			1
+		);
+		
+		add_submenu_page(
+			'push-notification-fcm',
+			__( 'Subscriptions', 'fcmpn' ),
+			__( 'Subscriptions', 'fcmpn' ),
+			'manage_options',
+			admin_url('edit-tags.php?taxonomy=fcmpn-subscriptions'),
+			NULL,
+			2
+		);
+	}
+	
+	/*
+     * Settings
+	 */
+	public function settings () {
+		FCM_Push_Notification::include_once( FCMPN_ROOT . '/admin/Settings.php' );
+	}
+	
+	/*
+     * Settings
+	 */
+	public function devices () {
+		FCM_Push_Notification::include_once( FCMPN_ROOT . '/admin/Devices.php' );
 	}
 	
 	/*
@@ -320,7 +398,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		];
 
 		if( isset($input['api_key']) ) {
-			if( strpos($input['api_key'], '•••') !== false ) {
+			if( strpos($input['api_key'], '••••••') !== false ) {
 				$new_input['api_key'] = self::get('api_key');
 			} else {
 				$new_input['api_key'] = sanitize_text_field($input['api_key']);

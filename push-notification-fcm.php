@@ -35,11 +35,6 @@
 if ( ! defined( 'WPINC' ) ) { die( "Don't mess with us." ); }
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-// Define database version
-if ( ! defined( 'FCMPN_DB_VERSION' ) ) {
-	define( 'FCMPN_DB_VERSION', '1.0.0' );
-}
-
 // Define plugin file (changes not allowed)
 if ( ! defined( 'FCMPN_FILE' ) ) {
 	define( 'FCMPN_FILE', __FILE__ );
@@ -76,9 +71,7 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 		self::include_once( FCMPN_INC . '/Metabox.php' );
 		self::include_once( FCMPN_INC . '/API.php' );
 		
-		add_action( 'admin_menu', [&$this, 'admin_menu'], 90, 1 );
 		add_action( 'init', [&$this, 'init'] );
-		add_action( 'admin_footer', [&$this, 'admin_footer'] );
 		
 		FCMPN_Settings::instance();
 		FCMPN_REST::instance();
@@ -86,65 +79,6 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 		FCMPN_API::instance();
 	}
 	
-	
-	/*
-     * Fix admin menus
-	 */
-	public function admin_footer () {
-		if( in_array('fcmpn-subscriptions', [$_GET['taxonomy'] ?? NULL]) ) : ?>
-<script>(function($){
-	$('#menu-posts')
-		.removeClass('wp-menu-open open-if-no-js wp-has-current-submenu')
-		.addClass('wp-not-current-submenu')
-		.find('.wp-menu-open')
-		.removeClass('wp-menu-open open-if-no-js wp-has-current-submenu')
-		.addClass('wp-not-current-submenu');
-	
-	$('#toplevel_page_push-notification-fcm')
-		.addClass('wp-has-current-submenu wp-menu-open')
-		.removeClass('wp-not-current-submenu')
-		.find('.wp-submenu.wp-submenu-wrap > li:nth-child(4)')
-		.addClass('current')
-		.find('a')
-		.addClass('current');
-}(jQuery||window.jQuery));</script>
-		<?php endif; }
-	
-	
-	/*
-     * Register admin menus
-	 */
-	public function admin_menu () {
-		add_menu_page(
-			__( 'FCM Push Notification', 'fcmpn' ),
-			__( 'FCM Push Notification', 'fcmpn' ),
-			'manage_options',
-			'push-notification-fcm',
-			[ &$this, 'settings' ],
-			'dashicons-rest-api',
-			3
-		);
-		
-		add_submenu_page(
-			'push-notification-fcm',
-			__( 'Devices', 'fcmpn' ),
-			__( 'Devices', 'fcmpn' ),
-			'manage_options',
-			'push-notification-fcm-devices',
-			[ &$this, 'devices' ],
-			1
-		);
-		
-		add_submenu_page(
-			'push-notification-fcm',
-			__( 'Subscriptions', 'fcmpn' ),
-			__( 'Subscriptions', 'fcmpn' ),
-			'manage_options',
-			admin_url('edit-tags.php?taxonomy=fcmpn-subscriptions'),
-			NULL,
-			2
-		);
-	}
 	
 	/*
      * initialize plugin functionality
@@ -217,20 +151,7 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 			);
 		}
 	}
-	
-	/*
-     * Settings
-	 */
-	public function settings () {
-		self::include_once( FCMPN_ROOT . '/admin/Settings.php' );
-	}
-	
-	/*
-     * Settings
-	 */
-	public function devices () {
-		self::include_once( FCMPN_ROOT . '/admin/Devices.php' );
-	}
+
 	
 	/*
 	 * The include_once statement includes and evaluates the specified file during the execution of the script.
