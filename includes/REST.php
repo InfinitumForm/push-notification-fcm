@@ -126,8 +126,6 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 		} else {
 			if( $term = get_term_by('slug', $subscription, 'fcmpn-subscriptions') ) {
 				$term_id = $term->term_id;
-			} {
-				$term_id = $term->term_id;
 			}
 		}
 		
