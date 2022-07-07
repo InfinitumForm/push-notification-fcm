@@ -123,13 +123,14 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 		}
 		
 		if($filter = sanitize_text_field($_GET['filter'] ?? '')) {
-			$query.=$wpdb->prepare(" AND `{$wpdb->posts}`.`post_status` = %s", $filter);
+			$query.=$wpdb->prepare( " AND `{$wpdb->posts}`.`post_status` = %s", $wpdb->esc_like($filter) );
 		}
 
 		/* -- Ordering parameters -- */
 		//Parameters that are going to be used to order the result
 		$orderby = sanitize_text_field($_GET['orderby'] ?? 'ID');
 		$order = sanitize_text_field($_GET['order'] ?? 'desc');
+		
 		if (!empty($orderby) & !empty($order))
 		{
 			if(
@@ -206,16 +207,19 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 		
 		$checkboxes = ($_POST['bulk_devices_id'] ?? NULL);
 		
-		if( is_array($checkboxes) ) {
-			switch ( $action ) {
-
-				case 'delete':				
-					$checkboxes = array_map('absint', $checkboxes);
-					if($checkboxes = array_filter($checkboxes))
-					{
-						global $wpdb;
-						$checkboxes_prepare = implode( ',', array_fill( 0, count( $checkboxes ), '%d' ) );
+		if( !empty($checkboxes) && is_array($checkboxes) ) {
+			
+			$checkboxes = array_map('absint', $checkboxes);
+			$checkboxes = array_filter($checkboxes);
 						
+			if( !empty($checkboxes) ) {
+				global $wpdb;
+				
+				$checkboxes_prepare = implode( ',', array_fill( 0, count( $checkboxes ), '%d' ) );
+				
+				switch ( $action ) {
+
+					case 'delete':
 						$wpdb->query(
 							$wpdb->prepare(
 								"DELETE FROM `{$wpdb->posts}` WHERE `{$wpdb->posts}`.`ID` IN ({$checkboxes_prepare})",
@@ -228,17 +232,11 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 								$checkboxes
 							)
 						);
-					}
-					break;
-					
-				case 'enable':
-				case 'disable':
-					$enable_disable = ($action === 'enable' ? 'private' : 'trash');
-					$checkboxes = array_map('absint', $checkboxes);
-					if($checkboxes = array_filter($checkboxes))
-					{
-						global $wpdb;
-						$checkboxes_prepare = implode( ',', array_fill( 0, count( $checkboxes ), '%d' ) );
+						break;
+						
+					case 'enable':
+					case 'disable':
+						$enable_disable = ( $action === 'disable' ? 'trash' : 'private' );
 						$wpdb->query(
 							$wpdb->prepare(
 								"UPDATE `{$wpdb->posts}` SET `post_status` = %s",
@@ -248,8 +246,8 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 								$checkboxes
 							)
 						);
-					}
-					break;
+						break;
+				}
 			}
 		}
 
@@ -330,7 +328,7 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 							echo '<th scope="row" class="check-column">' . sprintf(
 								'<label class="screen-reader-text" for="cb-select-%1$d"></label>
 								<input type="checkbox" id="cb-select-%1$d" name="bulk_devices_id[]" value="%1$d" />',
-								$rec->ID,
+								absint($rec->ID),
 								__('Select Device', 'fcmpn')
 							). '</th>';
 						break;
@@ -365,7 +363,7 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 									$links[]=sprintf(
 										'<a href="%1$s" target="_blank">%2$s</a>',
 										esc_url( admin_url('/edit-tags.php?taxonomy=fcmpn-subscriptions&post_type=post&s=' . $term->slug) ),
-										$term->name
+										esc_html($term->name)
 									);
 								}
 							}

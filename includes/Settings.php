@@ -12,6 +12,8 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		add_action( 'admin_init', [&$this, 'register_settings'], 10, 0 );
 		add_action( 'admin_menu', [&$this, 'admin_menu'], 90, 1 );
 		add_action( 'admin_footer', [&$this, 'admin_footer'] );
+		add_filter( 'plugin_row_meta', [&$this, 'action_links'], 10, 2 );
+		add_filter( 'plugin_action_links_' . plugin_basename(FCMPN_FILE), [&$this, 'plugin_action_links'] );
 	}
 	
 	/*
@@ -34,7 +36,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		.addClass('wp-has-current-submenu wp-menu-open')
 		.removeClass('wp-not-current-submenu')
 		.closest('#toplevel_page_push-notification-fcm')
-		.find('.wp-submenu.wp-submenu-wrap > li:nth-child(4)')
+		.find('.wp-submenu.wp-submenu-wrap > li:nth-child(3)')
 		.addClass('current')
 		.find('a')
 		.addClass('current');
@@ -45,26 +47,17 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
      * Register admin menus
 	 */
 	public function admin_menu () {
+		// Main navigation
 		add_menu_page(
 			__( 'FCM Push Notification', 'fcmpn' ),
 			__( 'FCM Push Notification', 'fcmpn' ),
 			'manage_options',
 			'push-notification-fcm',
-			[ &$this, 'settings' ],
-			'dashicons-rest-api',
-			3
-		);
-		
-		add_submenu_page(
-			'push-notification-fcm',
-			__( 'Devices', 'fcmpn' ),
-			__( 'Devices', 'fcmpn' ),
-			'manage_options',
-			'push-notification-fcm-devices',
 			[ &$this, 'devices' ],
-			1
+			'dashicons-rest-api',
+			80
 		);
-		
+		// Subscriptions
 		add_submenu_page(
 			'push-notification-fcm',
 			__( 'Subscriptions', 'fcmpn' ),
@@ -72,8 +65,21 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 			'manage_options',
 			admin_url('edit-tags.php?taxonomy=fcmpn-subscriptions'),
 			NULL,
+			1
+		);
+		// Settings
+		add_submenu_page(
+			'push-notification-fcm',
+			__( 'Settings', 'fcmpn' ),
+			__( 'Settings', 'fcmpn' ),
+			'manage_options',
+			'push-notification-fcm-settings',
+			[ &$this, 'settings' ],
 			2
 		);
+		// Rename submenu
+		global $submenu;
+		$submenu['push-notification-fcm'][0][0] = __( 'Devices', 'fcmpn' );
 	}
 	
 	/*
@@ -194,10 +200,16 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
      * Input: Firebase Server (API) Key
 	 */
 	public function input__fib_api_key () {
+		
+		if( defined('FCMPN_DEV_MODE') && FCMPN_DEV_MODE ) {
+			$value = esc_attr( self::get('api_key', '') );
+		} else {
+			$value = esc_attr( self::get('api_key', '') ? '••••••••••••••••••••••••••••••••••' : '' );
+		}
 		printf(
             '<input type="text" id="%1$s_api_key" name="%1$s[api_key]" value="%2$s" style="width:95%%; max-width:50%%; min-width:100px;" />',
             esc_attr( self::OPTION_NAME ),
-			esc_attr( self::get('api_key') ? '••••••••••••••••••••••••••••••••••' : '' )
+			$value
         );
 	}
 	
@@ -425,6 +437,48 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		
         return $new_input;
     }
+	
+	/*
+	 * Plugin action links after details
+	 */
+	public function action_links( $links, $file )
+	{
+		if( plugin_basename( FCMPN_FILE ) == $file )
+		{			
+			$links['registar_nestalih_donate'] = sprintf(
+				'<a href="%s" target="_blank" rel="noopener noreferrer" class="fcmpn-plugins-action-donation">%s</a>',
+				esc_url( 'https://www.buymeacoffee.com/ivijanstefan' ),
+				esc_html__( 'Donate', 'fcmpn' )
+			);
+			/*
+			$links['registar_nestalih_vote'] = sprintf(
+				'<a href="%s" target="_blank" rel="noopener noreferrer" class="fcmpn-plugins-action-vote" title="%s"><span style="color:#ffa000; font-size: 15px; bottom: -1px; position: relative;">&#9733;&#9733;&#9733;&#9733;&#9733;</span> %s</a>',
+				esc_url( 'https://wordpress.org/support/plugin/push-notification-fcm/reviews/?filter=5' ).'#new-post',
+				esc_attr__( 'Give us five if you like!', 'fcmpn' ),
+				esc_html__( '5 Stars?', 'fcmpn' )
+			);
+			*/
+		}
+		
+		return $links;
+	}
+	
+	/*
+	 * WP Hidden links by plugin setting page
+	 */
+	public function plugin_action_links( $links ) {
+		$links = array_merge( $links, [
+			'settings'	=> sprintf(
+				'<a href="' . self_admin_url( 'admin.php?page=push-notification-fcm-settings' ) . '" class="fcmpn-plugins-action-settings">%s</a>', 
+				esc_html__( 'Settings', 'fcmpn' )
+			),
+			'devices'	=> sprintf(
+				'<a href="' . self_admin_url( 'admin.php?page=push-notification-fcm' ) . '" class="fcmpn-plugins-action-devices">%s</a>', 
+				esc_html__( 'Devices', 'fcmpn' )
+			)
+		] );
+		return $links;
+	}
 	
 	/* 
 	 * Generate unique token
