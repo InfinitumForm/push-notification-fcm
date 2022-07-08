@@ -116,7 +116,6 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 				$update = wp_update_post( [
 					'ID' => $device->ID,
 					'post_excerpt'	=> $device_token,
-					'post_status'   => 'private',
 					'post_type'		=> 'fcmpn-devices',
 					'meta_input'	=> [
 						'_device_token' => $device_token,
