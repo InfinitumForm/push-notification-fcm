@@ -26,7 +26,7 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 						},
 						'required' => true
 					],
-					'user_email' => [
+					'device_uuid' => [
 						'validate_callback' => function($param, $request, $key) {
 							return !empty( $param );
 						},
@@ -65,7 +65,7 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 						},
 						'required' => true
 					],
-					'device_token' => [
+					'device_uuid' => [
 						'validate_callback' => function($param, $request, $key) {
 							return !empty( $param );
 						},
@@ -89,16 +89,6 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 			]);
 		}
 		
-		// Validate email
-		$user_email = sanitize_email($request->get_param( 'user_email' ));
-		if( !is_email( $user_email ) ) {
-			return new WP_REST_Response([
-				'error' => true,
-				'message' => __( 'Email address is not valid','fcmpn' ),
-				'subscription_id' => NULL
-			]);
-		}
-		
 		// Validate token
 		$device_token = sanitize_text_field($request->get_param( 'device_token' ) ?? '');
 		if( strlen($device_token) < 10 ) {
@@ -109,8 +99,40 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 			]);
 		}
 		
+		// Validate device-uuid
+		$device_uuid = sanitize_text_field($request->get_param( 'device_uuid' ) ?? '');
+		if( strlen($device_uuid) < 10 ) {
+			return new WP_REST_Response([
+				'error' => true,
+				'message' => __( 'There is an error in the device-uuid you sent','fcmpn' ),
+				'subscription_id' => NULL
+			]);
+		}
+		
 		// Is token exists
-		if( $device = get_page_by_title($device_token, OBJECT, 'fcmpn-devices') ) {
+		if( $device = get_page_by_title($device_uuid, OBJECT, 'fcmpn-devices') ) {
+			
+			if( $device->post_excerpt !== $device_token ) {
+				$update = wp_update_post( [
+					'ID' => $device->ID,
+					'post_excerpt'	=> $device_token,
+					'post_status'   => 'private',
+					'post_type'		=> 'fcmpn-devices',
+					'meta_input'	=> [
+						'_device_token' => $device_token,
+						'_os_version' => sanitize_text_field($request->get_param( 'os_version' ) ?? '')
+					]
+				] );
+				
+				if( is_wp_error($update) ) {
+					return new WP_REST_Response([
+						'error' => true,
+						'message' => __( 'Device token is not changed','fcmpn' ),
+						'subscription_id' => NULL
+					]);
+				}
+			}
+			
 			return new WP_REST_Response([
 				'error' => false,
 				'message' => __( 'Device token registered','fcmpn' ),
@@ -148,14 +170,14 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 		
 		// Save device
 		$post_id = wp_insert_post( [
-			'post_title'    => $device_token,
+			'post_title'    => $device_uuid,
 			'post_excerpt'	=> $device_token,
 			'post_status'   => 'private',
 			'post_type'		=> 'fcmpn-devices',
 			'meta_input'	=> [
+				'_device_token' => $device_token,
 				'_device_name' => sanitize_text_field($request->get_param( 'device_name' ) ?? ''),
-				'_os_version' => sanitize_text_field($request->get_param( 'os_version' ) ?? ''),
-				'_email' => $user_email
+				'_os_version' => sanitize_text_field($request->get_param( 'os_version' ) ?? '')
 			]
 		] );
 		
@@ -193,8 +215,8 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 		}
 		
 		// Validate token
-		$device_token = sanitize_text_field($request->get_param( 'device_token' ) ?? '');
-		if( strlen($device_token) < 10 ) {
+		$device_uuid = sanitize_text_field($request->get_param( 'device_uuid' ) ?? '');
+		if( strlen($device_uuid) < 10 ) {
 			return new WP_REST_Response([
 				'error' => true,
 				'message' => __( 'There is an error in the token you sent','fcmpn' ),
@@ -202,15 +224,14 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 			]);
 		}
 		
-		if( $device = get_page_by_title($device_token, OBJECT, 'fcmpn-devices') ) {
+		if( $device = get_page_by_title($device_uuid, OBJECT, 'fcmpn-devices') ) {
 		
 			wp_delete_post($device->ID, true);
 			
 			// Return
 			return new WP_REST_Response([
 				'error' => false,
-				'message' => __( 'The device token was successfully removed','fcmpn' ),
-				'subscription_id' => $post_id
+				'message' => __( 'The device token was successfully removed','fcmpn' )
 			]);
 		}
 		

@@ -41,7 +41,13 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 					'terms'    => $term_id
 				];
 			}
+			
+			if(count($tax_query) > 1) {
+				$tax_query['relation']='OR';
+			}
+
 			$devices_id = [];
+			
 			if( $get_devices = get_posts([
 				'post_type' => 'fcmpn-devices',
 				'post_status' => 'private',
@@ -53,7 +59,7 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 			]) ) {
 				unset($tax_query);
 				foreach($get_devices as $device) {
-					$devices_id[]=$device->post_title;
+					$devices_id[]=$device->post_excerpt;
 				}
 				unset($get_devices);
 				

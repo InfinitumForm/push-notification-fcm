@@ -45,9 +45,10 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 		// get the current admin screen
 		$screen = get_current_screen();
 		// retrieve the "per_page" option
-		$screen_option = $screen->get_option('per_page', 'option');
+	//	$screen_option = $screen->get_option('per_page', 'option');
 		// retrieve the value of the option stored for the current user
-		$perpage = get_user_meta($user, $screen_option, true);
+	//	$perpage = get_user_meta($user, $screen_option, true);
+		$perpage = 30;
 		if ( empty ( $perpage) || $perpage < 1 ) {
 			// get the default value if none is set
 			$perpage = $screen->get_option( 'per_page', 'default' );
@@ -69,11 +70,6 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 				`post_modified`,
 				(
 					SELECT `meta_value` FROM `{$wpdb->postmeta}` 
-					WHERE `{$wpdb->postmeta}`.`meta_key` = '_email' 
-					AND `{$wpdb->postmeta}`.`post_id` = `{$wpdb->posts}`.`ID`
-				) AS `email`,
-				(
-					SELECT `meta_value` FROM `{$wpdb->postmeta}` 
 					WHERE `{$wpdb->postmeta}`.`meta_key` = '_os_version' 
 					AND `{$wpdb->postmeta}`.`post_id` = `{$wpdb->posts}`.`ID`
 				) AS `os_version`,
@@ -81,7 +77,8 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 					SELECT `meta_value` FROM `{$wpdb->postmeta}` 
 					WHERE `{$wpdb->postmeta}`.`meta_key` = '_device_name' 
 					AND `{$wpdb->postmeta}`.`post_id` = `{$wpdb->posts}`.`ID`
-				) AS `device_name`
+				) AS `device_name`,
+				`post_excerpt` AS `devce_key`
 			FROM
 				`{$wpdb->posts}`
 			WHERE `{$wpdb->posts}`.`post_type` = 'fcmpn-devices'
@@ -97,11 +94,6 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 					OR `{$wpdb->posts}`.`post_name` LIKE %s
 					OR (
 						SELECT 1 FROM `{$wpdb->postmeta}` 
-						WHERE `{$wpdb->postmeta}`.`meta_key` = '_email' 
-						AND `{$wpdb->postmeta}`.`post_id` = `{$wpdb->posts}`.`ID`
-						AND `{$wpdb->postmeta}`.`meta_value` LIKE %s
-					) OR (
-						SELECT 1 FROM `{$wpdb->postmeta}` 
 						WHERE `{$wpdb->postmeta}`.`meta_key` = '_device_name' 
 						AND `{$wpdb->postmeta}`.`post_id` = `{$wpdb->posts}`.`ID`
 						AND `{$wpdb->postmeta}`.`meta_value` LIKE %s
@@ -112,7 +104,6 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 						AND `{$wpdb->postmeta}`.`meta_value` LIKE %s
 					)
 				) ",
-				'%'.$wpdb->esc_like($s).'%',
 				'%'.$wpdb->esc_like($s).'%',
 				'%'.$wpdb->esc_like($s).'%',
 				'%'.$wpdb->esc_like($s).'%',
@@ -263,8 +254,8 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 	{
 		return [
 			'cb'    => '<input type="checkbox">',
-			'post_title' => __('Device Key', 'fcmpn'),
-			'email' => __('Email', 'fcmpn'),
+			'device_uuid' => __('Device UUID', 'fcmpn'),
+			'devce_key' => __('Device Key', 'fcmpn'),
 			'subscription' => __('Subscription', 'fcmpn'),
 			'device_name' => __('Device Name', 'fcmpn'),
 			'os_version' => __('OS Version', 'fcmpn'),
@@ -279,7 +270,8 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 	public function get_sortable_columns()
 	{
 		return [
-			'post_title' => ['post_title', true],
+			'device_uuid' => ['post_excerpt', true],
+			'devce_key' => ['post_title', true],
 			'date' => ['post_modified', true]
 		];
 	}
@@ -332,33 +324,45 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 								__('Select Device', 'fcmpn')
 							). '</th>';
 						break;
-						case 'post_title':
-							printf(
-								'<td %1$s title="%2$s">%3$s</td>',
-								$attributes,
-								esc_attr($rec->post_title),
-								(
-									$rec->post_status === 'trash' 
-									? '<span style="color:#cc0000">' . __('Disabled', 'fcmpn') . ':</span> ' 
-									: ''
-								) . esc_html(mb_strimwidth( $rec->post_title, 0, 30, '...' )) 
-							);
+						case 'devce_key':
+							if( empty($rec->devce_key) ) {
+								printf(
+									'<td %1$s>%2$s</td>',
+									$attributes,
+									' - '
+								);
+							} else {							
+								printf(
+									'<td %1$s title="%2$s">%3$s</td>',
+									$attributes,
+									esc_attr($rec->devce_key),
+									(
+										$rec->post_status === 'trash' 
+										? '<span style="color:#cc0000">' . __('Disabled', 'fcmpn') . ':</span> ' 
+										: ''
+									) . esc_html(mb_strimwidth( $rec->devce_key, 0, 30, '...' )) 
+								);
+							}
 						break;
-						case 'email':
-							printf(
-								'<td %1$s>%2$s</td>',
-								$attributes,
-								sprintf(
-									'<a href="mailto:%1$s">%2$s</a>',
-									esc_attr($rec->email),
-									esc_html($rec->email)
-								)
-								
-							);
+						case 'device_uuid':
+							if( empty($rec->post_title) ) {
+								printf(
+									'<td %1$s>%2$s</td>',
+									$attributes,
+									' - '
+								);
+							} else {							
+								printf(
+									'<td %1$s title="%2$s">%3$s</td>',
+									$attributes,
+									esc_attr($rec->post_title),
+									esc_html(mb_strimwidth( $rec->post_title, 0, 30, '...' )) 
+								);
+							}
 						break;
 						case 'subscription':
-							$links = [];
 							if( $get_terms = get_the_terms((int)$rec->ID, 'fcmpn-subscriptions') ) {
+								$links = [];
 								foreach($get_terms as $term) {
 									$links[]=sprintf(
 										'<a href="%1$s" target="_blank">%2$s</a>',
@@ -366,27 +370,49 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 										esc_html($term->name)
 									);
 								}
-							}
-						
-							printf(
-								'<td %1$s>%2$s</td>',
-								$attributes,
-								join(', ', $links)
-							);
+								
+								printf(
+									'<td %1$s>%2$s</td>',
+									$attributes,
+									join(', ', $links)
+								);
+							} else {
+								printf(
+									'<td %1$s>%2$s</td>',
+									$attributes,
+									__('undefined', 'fcmpn')
+								);
+							}							
 						break;
 						case 'device_name':
-							printf(
-								'<td %1$s>%2$s</td>',
-								$attributes,
-								esc_html($rec->device_name)
-							);
+							if( empty($rec->device_name) ) {
+								printf(
+									'<td %1$s>%2$s</td>',
+									$attributes,
+									' - '
+								);
+							} else {
+								printf(
+									'<td %1$s>%2$s</td>',
+									$attributes,
+									esc_html($rec->device_name)
+								);
+							}
 						break;
 						case 'os_version':
-							printf(
-								'<td %1$s>%2$s</td>',
-								$attributes,
-								esc_html($rec->os_version)
-							);
+							if( empty($rec->os_version) ) {
+								printf(
+									'<td %1$s>%2$s</td>',
+									$attributes,
+									' - '
+								);
+							} else {
+								printf(
+									'<td %1$s>%2$s</td>',
+									$attributes,
+									esc_html($rec->os_version)
+								);
+							}
 						break;
 						case 'date':
 							printf(

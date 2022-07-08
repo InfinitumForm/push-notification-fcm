@@ -211,6 +211,13 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
             esc_attr( self::OPTION_NAME ),
 			$value
         );
+		printf(
+			'<p>%s</p>',
+			sprintf(
+				__('Your api (server) key is located in the %s.', 'fcmpn'),
+				'<a href="https://console.firebase.google.com/" target="_blank">' . __('Firebase console', 'fcmpn') . '</a>'
+			)
+		);
 	}
 	
 	
@@ -273,7 +280,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 				<strong>%1$s</strong><br>
 				<ul>
 					<li><code>rest_api_key</code> %2$s</li>
-					<li><code>user_email</code> %2$s</li>
+					<li><code>device_uuid</code> %2$s</li>
 					<li><code>device_token</code> %2$s</li>
 					<li><code>subscription</code> %2$s - %4$s</li>
 					<li><code>device_name</code> %3$s</li>
@@ -312,7 +319,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 				<strong>%1$s</strong><br>
 				<ul>
 					<li><code>rest_api_key</code> %2$s</li>
-					<li><code>device_token</code> %2$s</li>
+					<li><code>device_uuid</code> %2$s</li>
 				</ul>
 			</p>',
 			__('Parameters:', 'fcmpn'),
