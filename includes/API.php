@@ -47,7 +47,6 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 			}
 
 			$devices_id = [];
-			
 			if( $get_devices = get_posts([
 				'post_type' => 'fcmpn-devices',
 				'post_status' => 'private',
@@ -58,25 +57,29 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 				'tax_query'              => $tax_query
 			]) ) {
 				unset($tax_query);
-				foreach($get_devices as $device) {
-					$devices_id[]=$device->post_excerpt;
-				}
+				
+				$devices_id = wp_list_pluck($get_devices, 'post_excerpt');
+				$devices_id = apply_filters('fcmpm_api_get_devices', $devices_id, $get_devices, $post_id, $post);
 				unset($get_devices);
 				
 				if( !empty($devices_id) ) {
 
-					$notification = [
+					$notification = apply_filters('fcmpm_api_send_notification', [
 						'title' => $post->post_title,
 						'body' => mb_strimwidth( strip_tags($post->post_content), 0, 160, '...' ),
 						'sound' => 'default',
 						'type' => 1
+					], $post_id, $post);
+					
+					$data = [
+						'news_id' => $post_id
 					];
 					
-					$data = ['news_id' => $post_id];
-					
-					if( $img_src = get_the_post_thumbnail_url($post_id, 'large') ) {
+					if( $img_src = get_the_post_thumbnail_url($post_id, 'medium') ) {
 						$data['image'] = $img_src;
 					}
+					
+					$data = apply_filters('fcmpm_api_send_notification_data', $data, $post_id, $post);
 					
 					$this->send_notification(
 						$devices_id,
@@ -92,6 +95,7 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
      * PRIVATE: Send notification
 	 */
 	private function send_notification( $ids, $notification, $data) {
+		
 		$fields = array(
 			'registration_ids' => $ids,
 			'notification' => $notification,
