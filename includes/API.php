@@ -59,15 +59,20 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 				unset($tax_query);
 				
 				$devices_id = wp_list_pluck($get_devices, 'post_excerpt');
-				$devices_id = apply_filters('fcmpm_api_get_devices', $devices_id, $get_devices, $post_id, $post);
+				$devices_id = apply_filters('fcmpm_api_send_notification_devices', $devices_id, $get_devices, $post_id, $post);
 				unset($get_devices);
 				
 				if( !empty($devices_id) ) {
 
 					$notification = apply_filters('fcmpm_api_send_notification', [
-						'title' => $post->post_title,
-						'body' => mb_strimwidth( strip_tags($post->post_content), 0, 160, '...' ),
-						'sound' => 'default',
+						'title' => apply_filters('fcmpm_api_send_notification_post_title', $post->post_title),
+						'body' => mb_strimwidth(
+							strip_tags($post->post_content),
+							0,
+							apply_filters('fcmpm_api_send_notification_post_content_max_length', 160),
+							'...'
+						),
+						'sound' => apply_filters('fcmpm_api_notification_sound', 'default'),
 						'type' => 1
 					], $post_id, $post);
 					
@@ -75,8 +80,8 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 						'news_id' => $post_id
 					];
 					
-					if( $img_src = get_the_post_thumbnail_url($post_id, 'medium') ) {
-						$data['image'] = $img_src;
+					if( $img_src = get_the_post_thumbnail_url($post_id, apply_filters('fcmpm_api_send_notification_thumbnail_size', 'medium')) ) {
+						$data['image'] = apply_filters('fcmpm_api_send_notification_thumbnail_url', $img_src, $post_id);
 					}
 					
 					$data = apply_filters('fcmpm_api_send_notification_data', $data, $post_id, $post);
