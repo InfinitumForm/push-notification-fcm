@@ -74,6 +74,10 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 					
 					$data = ['news_id' => $post_id];
 					
+					if( $img_src = get_the_post_thumbnail_url($post_id, 'large') ) {
+						$data['image'] = $img_src;
+					}
+					
 					$this->send_notification(
 						$devices_id,
 						$notification,
