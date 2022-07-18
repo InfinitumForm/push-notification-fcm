@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Firebase Push Notification\n"
-"POT-Creation-Date: 2022-07-05 15:34+0200\n"
-"PO-Revision-Date: 2022-07-05 15:34+0200\n"
+"POT-Creation-Date: 2022-07-18 11:16+0200\n"
+"PO-Revision-Date: 2022-07-18 11:29+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sr_RS\n"
@@ -24,283 +24,328 @@ msgstr ""
 
 #: admin/Devices.php:2
 msgid "All Registered Devices"
-msgstr ""
+msgstr "Сви регистровани уређаји"
 
-#: admin/Devices.php:5 admin/Devices.php:7 push-notification-fcm.php:164
+#: admin/Devices.php:6 admin/Devices.php:8 push-notification-fcm.php:98
 msgid "Search Devices"
-msgstr ""
+msgstr "Претражи уређаје"
 
 #. Plugin Name of the plugin/theme
 #: admin/Settings.php:2
 msgid "Firebase Push Notification"
-msgstr ""
+msgstr "\"Firebase\" - Слање нотификације"
 
-#: includes/Devices.php:27
-msgid "Enable Device"
-msgstr ""
+#: includes/Devices.php:77
+msgid "All"
+msgstr "Сви"
 
-#: includes/Devices.php:28
-msgid "Disable Device"
-msgstr ""
+#: includes/Devices.php:82
+msgid "Enabled"
+msgstr "Омогућени"
 
-#: includes/Devices.php:29
-msgid "Delete"
-msgstr "Избришите"
-
-#: includes/Devices.php:201
-msgid "Nope! Security check failed!"
-msgstr ""
-
-#: includes/Devices.php:268
-msgid "Device Key"
-msgstr ""
-
-#: includes/Devices.php:269
-msgid "Email"
-msgstr "Email"
-
-#: includes/Devices.php:270 push-notification-fcm.php:195
-#: push-notification-fcm.php:196 push-notification-fcm.php:210
-msgid "Subscription"
-msgstr ""
-
-#: includes/Devices.php:271
-msgid "Device Name"
-msgstr ""
-
-#: includes/Devices.php:272
-msgid "OS Version"
-msgstr ""
-
-#: includes/Devices.php:273
-msgid "Subscribed"
-msgstr ""
-
-#: includes/Devices.php:334
-msgid "Select Device"
-msgstr ""
-
-#: includes/Devices.php:344
+#: includes/Devices.php:88 includes/Devices.php:421
 msgid "Disabled"
 msgstr "Онемогућен"
 
+#: includes/Devices.php:255
+msgid "Enable Device"
+msgstr "Омогући уређај"
+
+#: includes/Devices.php:256
+msgid "Disable Device"
+msgstr "Онемогући уређај"
+
+#: includes/Devices.php:257
+msgid "Delete"
+msgstr "Избришите"
+
+#: includes/Devices.php:274
+msgid "Nope! Security check failed!"
+msgstr "Стани! Сигурносна провера није прошла!"
+
+#: includes/Devices.php:337
+msgid "Device UUID"
+msgstr "УУИД уређаја"
+
+#: includes/Devices.php:338
+msgid "Device Key"
+msgstr "Кључ уређаја"
+
+#: includes/Devices.php:339 push-notification-fcm.php:129
+#: push-notification-fcm.php:130 push-notification-fcm.php:144
+msgid "Subscription"
+msgstr "Пријава"
+
+#: includes/Devices.php:340
+msgid "Device Name"
+msgstr "Име уређаја"
+
+#: includes/Devices.php:341
+msgid "OS Version"
+msgstr "Верзија система"
+
+#: includes/Devices.php:342
+msgid "Subscribed"
+msgstr "Пријављен"
+
+#: includes/Devices.php:404
+msgid "Select Device"
+msgstr "Одабери уређај"
+
+#: includes/Devices.php:463
+msgid "undefined"
+msgstr "недефинисано"
+
 #: includes/Metabox.php:23
 msgid "Push Notification"
-msgstr ""
+msgstr "Пошаљи нотификацију"
 
 #: includes/Metabox.php:51
 msgid "Send notification on post publish"
-msgstr ""
+msgstr "Пошаљите обавештење о објављивању"
 
 #: includes/Metabox.php:54
 msgid "Select the subscription you want to notify"
-msgstr ""
+msgstr "Изаберите претплату коју желите да обавестите"
 
 #: includes/Metabox.php:62
 msgid "There are currently no registered subscriptions"
-msgstr ""
+msgstr "Тренутно нема регистрованих претплата"
 
-#: includes/REST.php:87 includes/REST.php:192
+#: includes/REST.php:87 includes/REST.php:211
 msgid "REST API key is not valid"
-msgstr ""
+msgstr "РЕСТ АПИ кључ није важећи"
 
-#: includes/REST.php:97
-msgid "Email address is not valid"
-msgstr ""
-
-#: includes/REST.php:107 includes/REST.php:202
+#: includes/REST.php:97 includes/REST.php:221
 msgid "There is an error in the token you sent"
-msgstr ""
+msgstr "Постоји грешка у токену који сте послали"
 
-#: includes/REST.php:116 includes/REST.php:179 includes/Settings.php:208
+#: includes/REST.php:107
+msgid "There is an error in the device-uuid you sent"
+msgstr "Постоји грешка у \"device-uuid\" који сте послали"
+
+#: includes/REST.php:129
+msgid "Device token is not changed"
+msgstr "Токен уређаја није промењен"
+
+#: includes/REST.php:137 includes/REST.php:198 includes/Settings.php:336
 msgid "Device token registered"
-msgstr ""
+msgstr "Регистрован је токен уређаја"
 
-#: includes/REST.php:146
+#: includes/REST.php:165
 msgid "Not able to subscribe"
-msgstr ""
+msgstr "Није могуће претплатити се"
 
-#: includes/REST.php:168
+#: includes/REST.php:187
 msgid "Device is not saved"
-msgstr ""
+msgstr "Уређај није сачуван"
 
-#: includes/REST.php:214 includes/Settings.php:240
+#: includes/REST.php:233 includes/Settings.php:368
 msgid "The device token was successfully removed"
-msgstr ""
+msgstr "Токен уређаја је успешно уклоњен"
 
-#: includes/REST.php:221
+#: includes/REST.php:239
 msgid "No device token found"
-msgstr ""
+msgstr "Није пронађен токен уређаја"
 
-#: includes/Settings.php:29
+#: includes/Settings.php:53 includes/Settings.php:54
+msgid "FCM Push Notification"
+msgstr "ФЦМ Слање нотификације"
+
+#: includes/Settings.php:66 includes/Settings.php:67
+#: push-notification-fcm.php:128 push-notification-fcm.php:143
+msgid "Subscriptions"
+msgstr "Претплате"
+
+#: includes/Settings.php:76 includes/Settings.php:77 includes/Settings.php:511
+msgid "Settings"
+msgstr "Подешавање"
+
+#: includes/Settings.php:85 includes/Settings.php:515
+#: push-notification-fcm.php:91
+msgid "Devices"
+msgstr "Уређаји"
+
+#: includes/Settings.php:108
+msgid "Devices per page"
+msgstr "Уређаја по страници"
+
+#: includes/Settings.php:144
 msgid "Firebase Server (API) Settings"
-msgstr ""
+msgstr "Подешавања Фиребасе сервера (АПИ)."
 
-#: includes/Settings.php:36
+#: includes/Settings.php:151
 msgid "Server (API) Key"
-msgstr ""
+msgstr "Кључ сервера (АПИ)."
 
-#: includes/Settings.php:46
+#: includes/Settings.php:161
 msgid "Plugin settings"
 msgstr "Подешавање додатка"
 
-#: includes/Settings.php:53
+#: includes/Settings.php:168
 msgid "REST API Key"
-msgstr ""
+msgstr "РЕСТ АПИ кључ"
 
-#: includes/Settings.php:63
+#: includes/Settings.php:178
 msgid "Enable in Post Types"
-msgstr ""
+msgstr "Омогући у Типовима постова"
 
-#: includes/Settings.php:70
+#: includes/Settings.php:185
 msgid "Choose Post Types"
-msgstr ""
+msgstr "Изаберите врсте постова"
 
-#: includes/Settings.php:80
+#: includes/Settings.php:195
 msgid "REST API Endpoints"
-msgstr ""
+msgstr "РЕСТ АПИ крајње тачке"
 
-#: includes/Settings.php:87
+#: includes/Settings.php:202
 msgid "Subscribe"
-msgstr ""
+msgstr "Претплатити се"
 
-#: includes/Settings.php:95
+#: includes/Settings.php:210
 msgid "Unsubscribe"
 msgstr "Отказивање претплате"
 
-#: includes/Settings.php:111
+#: includes/Settings.php:226
 msgid ""
 "An API key is a unique string that's used to route requests to your Firebase "
 "project when interacting with Firebase and Google services."
 msgstr ""
+"АПИ кључ је јединствени стринг који се користи за усмеравање захтева ка "
+"вашем Фиребасе пројекту приликом интеракције са Фиребасе и Гоогле услугама."
 
-#: includes/Settings.php:135
+#: includes/Settings.php:248
+#, php-format
+msgid "Your api (server) key is located in the %s."
+msgstr "Ваш апи (сервер) кључ се налази у %s."
+
+#: includes/Settings.php:249
+msgid "Firebase console"
+msgstr "Фиребасе конзола"
+
+#: includes/Settings.php:263
 msgid "Important settings for this plugin."
-msgstr ""
+msgstr "Важна подешавања за овај додатак."
 
-#: includes/Settings.php:169
+#: includes/Settings.php:297
 msgid ""
 "In order to be able to send push notifications, you need to record the "
 "device ID in the site's database. Therefore, you have 2 REST endpoints to "
 "subscribe the device ID during app installation or unsubscribe the device ID "
 "during app deletion."
 msgstr ""
+"Да бисте могли да шаљете обавештења, потребно је да забележите ИД уређаја у "
+"бази података сајта. Према томе, имате две РЕСТ крајње тачке да се "
+"претплатите на ИД уређаја током инсталације апликације или да откажете "
+"претплату на ИД уређаја током брисања апликације."
 
-#: includes/Settings.php:193 includes/Settings.php:228
+#: includes/Settings.php:321 includes/Settings.php:356
 msgid "Parameters:"
-msgstr ""
+msgstr "Параметри:"
 
-#: includes/Settings.php:194 includes/Settings.php:229
+#: includes/Settings.php:322 includes/Settings.php:357
 msgid "(required)"
-msgstr "(obavezno)"
+msgstr "(обавезно)"
 
-#: includes/Settings.php:195
+#: includes/Settings.php:323
 msgid "(optional)"
 msgstr "(опционо)"
 
-#: includes/Settings.php:196
+#: includes/Settings.php:324
 msgid ""
 "This would be the category in which the device is registered, if there is no "
 "category exists in WordPress it’ll be created automatically."
 msgstr ""
+"Ово би била категорија у којој је уређај регистрован, ако у Вордпресу не "
+"постоји категорија, биће креирана аутоматски."
 
-#: includes/Settings.php:207 includes/Settings.php:239
+#: includes/Settings.php:335 includes/Settings.php:367
 msgid "Returns:"
-msgstr ""
+msgstr "Враћа:"
 
-#: includes/Settings.php:253
+#: includes/Settings.php:381
 msgid "Allow notifications in selected post types"
-msgstr ""
+msgstr "Дозволи обавештења у изабраним типовима постова"
 
-#: push-notification-fcm.php:119 push-notification-fcm.php:120
-msgid "FCM Push Notification"
-msgstr ""
+#: includes/Settings.php:489
+msgid "Donate"
+msgstr "Донирајте"
 
-#: push-notification-fcm.php:130 push-notification-fcm.php:131
-#: push-notification-fcm.php:157
-msgid "Devices"
-msgstr ""
-
-#: push-notification-fcm.php:140 push-notification-fcm.php:141
-#: push-notification-fcm.php:194 push-notification-fcm.php:209
-msgid "Subscriptions"
-msgstr "Претплате"
-
-#: push-notification-fcm.php:158
+#: push-notification-fcm.php:92
 msgid "Device"
-msgstr ""
+msgstr "Уређај"
 
-#: push-notification-fcm.php:159 push-notification-fcm.php:160
+#: push-notification-fcm.php:93 push-notification-fcm.php:94
 msgid "Add New Device"
-msgstr ""
+msgstr "Додај нови уређај"
 
-#: push-notification-fcm.php:161
+#: push-notification-fcm.php:95
 msgid "Edit Device"
-msgstr ""
+msgstr "Уреди уређај"
 
-#: push-notification-fcm.php:162
+#: push-notification-fcm.php:96
 msgid "New Device"
-msgstr ""
+msgstr "Нови уређај"
 
-#: push-notification-fcm.php:163
+#: push-notification-fcm.php:97
 msgid "View Device"
-msgstr ""
+msgstr "Прикажи уређај"
 
-#: push-notification-fcm.php:165
+#: push-notification-fcm.php:99
 msgid "No Device Found"
-msgstr ""
+msgstr "Није пронађен ниједан уређај"
 
-#: push-notification-fcm.php:166
+#: push-notification-fcm.php:100
 msgid "No Device Found in Trash"
-msgstr ""
+msgstr "Ниједан уређај није пронађен у Отпаду"
 
-#: push-notification-fcm.php:168
+#: push-notification-fcm.php:102
 msgid "Device Image"
-msgstr ""
+msgstr "Слика уређаја"
 
-#: push-notification-fcm.php:169
+#: push-notification-fcm.php:103
 msgid "Select Device Image"
-msgstr ""
+msgstr "Изаберите Слика уређаја"
 
-#: push-notification-fcm.php:170
+#: push-notification-fcm.php:104
 msgid "Remove Device Image"
-msgstr ""
+msgstr "Уклоните слику уређаја"
 
-#: push-notification-fcm.php:171
+#: push-notification-fcm.php:105
 msgid "Use Device Image"
-msgstr ""
+msgstr "Користите слику уређаја"
 
-#: push-notification-fcm.php:172
+#: push-notification-fcm.php:106
 msgid "Insert Into Device"
-msgstr ""
+msgstr "Уметните у уређај"
 
-#: push-notification-fcm.php:197
+#: push-notification-fcm.php:131
 msgid "All Subscription"
-msgstr ""
+msgstr "Сва претплата"
 
-#: push-notification-fcm.php:198
+#: push-notification-fcm.php:132
 msgid "Edit Subscription"
-msgstr ""
+msgstr "Уреди претплату"
 
-#: push-notification-fcm.php:199
+#: push-notification-fcm.php:133
 msgid "View Subscription"
-msgstr ""
+msgstr "Прикажи претплату"
 
-#: push-notification-fcm.php:200
+#: push-notification-fcm.php:134
 msgid "Update Subscription"
-msgstr ""
+msgstr "Ажурирајте претплату"
 
-#: push-notification-fcm.php:201
+#: push-notification-fcm.php:135
 msgid "Add New Subscription"
-msgstr ""
+msgstr "Додај нову претплату"
 
-#: push-notification-fcm.php:202
+#: push-notification-fcm.php:136
 msgid "New Subscription Name"
-msgstr ""
+msgstr "New Subscription Name"
 
-#: push-notification-fcm.php:203 push-notification-fcm.php:204
+#: push-notification-fcm.php:137 push-notification-fcm.php:138
 msgid "Parent Subscription"
-msgstr ""
+msgstr "Претплата за родитеље"
 
 #. Plugin URI of the plugin/theme
 msgid "https://wordpress.org/plugins/push-notification-fcm/"
@@ -311,6 +356,8 @@ msgid ""
 "Firebase Cloud Messaging (FCM) to iOS and Android when content is published "
 "or updated."
 msgstr ""
+"Firebase Cloud Messaging (FCM) - Нотификациони систем за Апл и Андроид "
+"уређаје када се садржај објави."
 
 #. Author of the plugin/theme
 msgid "Ivijan-Stefan Stipić"
@@ -319,3 +366,6 @@ msgstr "Ивијан-Стефан Стипић"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/ivijanstefan/"
 msgstr "https://profiles.wordpress.org/ivijanstefan/"
+
+#~ msgid "Email"
+#~ msgstr "Email"

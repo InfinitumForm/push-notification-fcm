@@ -21,14 +21,76 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 		$this->display();
 	}
 	
-	public function get_bulk_actions() {
+	/**
+	 * Generate filter links for the table
+	 */
+	public static function get_filter_links() {
+		global $wpdb;
+		
+		$count = [
+			'enabled' => 0,
+			'disabled' => 0
+		];
+		
+		$filter = sanitize_text_field($_GET['filter'] ?? NULL);
+		
+		$query = "SELECT COUNT(1) FROM `{$wpdb->posts}` WHERE `{$wpdb->posts}`.`post_type` = 'fcmpn-devices'";
+		
+		/* -- Search -- */
+		if(wp_verify_nonce(($_GET['_wpnonce'] ?? NULL), 'fcmpn-devices') && ($s = sanitize_text_field($_GET['s'] ?? ''))){
+			$query.=$wpdb->prepare(
+				" AND (
+					`{$wpdb->posts}`.`post_title` LIKE %s 
+					OR `{$wpdb->posts}`.`post_content` LIKE %s 
+					OR `{$wpdb->posts}`.`post_excerpt` LIKE %s 
+					OR `{$wpdb->posts}`.`post_name` LIKE %s
+					OR (
+						SELECT 1 FROM `{$wpdb->postmeta}` 
+						WHERE `{$wpdb->postmeta}`.`meta_key` = '_device_name' 
+						AND `{$wpdb->postmeta}`.`post_id` = `{$wpdb->posts}`.`ID`
+						AND `{$wpdb->postmeta}`.`meta_value` LIKE %s
+					) OR (
+						SELECT 1 FROM `{$wpdb->postmeta}` 
+						WHERE `{$wpdb->postmeta}`.`meta_key` = '_os_version' 
+						AND `{$wpdb->postmeta}`.`post_id` = `{$wpdb->posts}`.`ID`
+						AND `{$wpdb->postmeta}`.`meta_value` LIKE %s
+					)
+				) ",
+				'%'.$wpdb->esc_like($s).'%',
+				'%'.$wpdb->esc_like($s).'%',
+				'%'.$wpdb->esc_like($s).'%',
+				'%'.$wpdb->esc_like($s).'%',
+				'%'.$wpdb->esc_like($s).'%',
+				'%'.$wpdb->esc_like($s).'%'
+			);
+		}
+		
+		$count['enabled'] = absint( $wpdb->get_var( $query . " AND `{$wpdb->posts}`.`post_status` = 'private'" ) );
+		$count['disabled'] = absint( $wpdb->get_var( $query . " AND `{$wpdb->posts}`.`post_status` = 'trash'" ) );
 
-		return array(
-			'enable' => __( 'Enable Device', 'fcmpn' ),
-			'disable' => __( 'Disable Device', 'fcmpn' ),
-			'delete' => __( 'Delete', 'fcmpn' )
-		);
-
+		?>
+		<ul class="subsubsub">
+			<li class="all"><a href="<?php echo add_query_arg('filter',NULL); ?>"<?php echo add_query_arg('filter','enabled'); ?>"<?php
+				if($filter == NULL) {
+					echo ' class="current" aria-current="page"';
+				}
+			?>><?php _e('All', 'fcmpn'); ?> <span class="count">(<?php echo ($count['enabled']+$count['disabled']); ?>)</span></a> |</li>
+			<li class="enabled"><a href="<?php echo add_query_arg('filter','enabled'); ?>"<?php
+				if($filter == 'enabled') {
+					echo ' class="current" aria-current="page"';
+				}
+			?>><?php _e('Enabled', 'fcmpn'); ?> <span class="count">(<?php echo $count['enabled']; ?>)</span></a> 
+			<?php if($count['disabled']) : ?>|</li>
+			<li class="disabled"><a href="<?php echo add_query_arg('filter','disabled'); ?>"<?php echo add_query_arg('filter','enabled'); ?>"<?php
+				if($filter == 'disabled') {
+					echo ' class="current" aria-current="page"';
+				}
+			?>><?php _e('Disabled', 'fcmpn'); ?> <span class="count">(<?php echo $count['disabled']; ?>)</span></a></li>
+			<?php else : ?>
+			</li>
+			<?php endif; ?>
+		</ul>
+		<?php
 	}
 	
 	/**
@@ -45,22 +107,19 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 		// get the current admin screen
 		$screen = get_current_screen();
 		// retrieve the "per_page" option
-	//	$screen_option = $screen->get_option('per_page', 'option');
+		$screen_option = $screen->get_option('per_page', 'option');
 		// retrieve the value of the option stored for the current user
-	//	$perpage = get_user_meta($user, $screen_option, true);
-		$perpage = 30;
+		$perpage = get_user_meta($user, $screen_option, true);
+		// get the default value if none is set
 		if ( empty ( $perpage) || $perpage < 1 ) {
-			// get the default value if none is set
 			$perpage = $screen->get_option( 'per_page', 'default' );
 		}
-		
 		// Make it absolute integer
 		if( empty($perpage) ) {
 			$perpage = 0;
 		} else {
 			$perpage = (int)$perpage;
 		}
-		
 		/* -- Preparing your query -- */
 		$query = "
 			SELECT
@@ -114,6 +173,13 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 		}
 		
 		if($filter = sanitize_text_field($_GET['filter'] ?? '')) {
+			
+			if($filter === 'enabled') {
+				$filter = 'private';
+			} else if($filter === 'disabled') {
+				$filter = 'trash';
+			}
+			
 			$query.=$wpdb->prepare( " AND `{$wpdb->posts}`.`post_status` = %s", $wpdb->esc_like($filter) );
 		}
 
@@ -180,7 +246,22 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 		$this->items = $wpdb->get_results($query);
 	}
 	
+	/**
+	 * Generate bulk actions
+	 */
+	public function get_bulk_actions() {
+
+		return array(
+			'enable' => __( 'Enable Device', 'fcmpn' ),
+			'disable' => __( 'Disable Device', 'fcmpn' ),
+			'delete' => __( 'Delete', 'fcmpn' )
+		);
+
+	}
 	
+	/**
+	 * Process bulk actions
+	 */
 	public function process_bulk_action() {
 
 		// security check!
@@ -243,8 +324,7 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 		}
 
 		return;
-	}
-	
+	}	
 	
 	/**
 	 * Define the columns that are going to be used in the table

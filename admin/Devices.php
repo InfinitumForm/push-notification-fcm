@@ -1,5 +1,6 @@
 <div class="wrap">
 	<h1><?php _e('All Registered Devices', 'fcmpn'); ?></h1>
+	<?php FCMPN_Devices_Table::get_filter_links(); ?>
 	<form method="get" id="devices-table-search">
 		<p class="search-box">
 			<label class="screen-reader-text" for="post-search-input"><?php _e('Search Devices', 'fcmpn'); ?>:</label>

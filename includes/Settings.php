@@ -14,6 +14,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		add_action( 'admin_footer', [&$this, 'admin_footer'] );
 		add_filter( 'plugin_row_meta', [&$this, 'action_links'], 10, 2 );
 		add_filter( 'plugin_action_links_' . plugin_basename(FCMPN_FILE), [&$this, 'plugin_action_links'] );
+		add_filter( 'set-screen-option', [&$this, 'set_screen_option'], 10, 3 );
 	}
 	
 	/*
@@ -48,7 +49,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 	 */
 	public function admin_menu () {
 		// Main navigation
-		add_menu_page(
+		$this->devices_page = add_menu_page(
 			__( 'FCM Push Notification', 'fcmpn' ),
 			__( 'FCM Push Notification', 'fcmpn' ),
 			'manage_options',
@@ -57,6 +58,8 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 			'dashicons-rest-api',
 			80
 		);
+		add_action("load-{$this->devices_page}", [&$this, 'add_devices_page_screen_option']);
+		
 		// Subscriptions
 		add_submenu_page(
 			'push-notification-fcm',
@@ -83,17 +86,45 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 	}
 	
 	/*
-     * Settings
+     * Set global screen option
 	 */
-	public function settings () {
-		FCM_Push_Notification::include_once( FCMPN_ROOT . '/admin/Settings.php' );
+	public function set_screen_option ($status, $option, $value) {
+		if ( 'fcmpn_devices_per_page' == $option ){
+			return $value;
+		}
+	}
+	
+	/*
+     * Add Devices Screen Option
+	 */
+	public function add_devices_page_screen_option () {
+		$screen = get_current_screen();
+ 
+		if(!is_object($screen) || $screen->id != $this->devices_page) {
+			return;
+		}
+	
+		add_screen_option( 'per_page', [
+			'label' => __( 'Devices per page', 'fcmpn' ),
+			'default' => 20,
+			'min' => 5,
+			'max' => 1000,
+			'option' => 'fcmpn_devices_per_page'
+		] );
+	}
+	
+	/*
+     * Devices
+	 */
+	public function devices () {
+		FCM_Push_Notification::include_once( FCMPN_ROOT . '/admin/Devices.php' );
 	}
 	
 	/*
      * Settings
 	 */
-	public function devices () {
-		FCM_Push_Notification::include_once( FCMPN_ROOT . '/admin/Devices.php' );
+	public function settings () {
+		FCM_Push_Notification::include_once( FCMPN_ROOT . '/admin/Settings.php' );
 	}
 	
 	/*
