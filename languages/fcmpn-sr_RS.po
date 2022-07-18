@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Firebase Push Notification\n"
-"POT-Creation-Date: 2022-07-18 11:16+0200\n"
-"PO-Revision-Date: 2022-07-18 11:29+0200\n"
+"POT-Creation-Date: 2022-07-18 12:55+0200\n"
+"PO-Revision-Date: 2022-07-18 13:03+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sr_RS\n"
@@ -128,7 +128,7 @@ msgstr "Постоји грешка у \"device-uuid\" који сте посл�
 msgid "Device token is not changed"
 msgstr "Токен уређаја није промењен"
 
-#: includes/REST.php:137 includes/REST.php:198 includes/Settings.php:336
+#: includes/REST.php:137 includes/REST.php:198 includes/Settings.php:354
 msgid "Device token registered"
 msgstr "Регистрован је токен уређаја"
 
@@ -140,7 +140,7 @@ msgstr "Није могуће претплатити се"
 msgid "Device is not saved"
 msgstr "Уређај није сачуван"
 
-#: includes/REST.php:233 includes/Settings.php:368
+#: includes/REST.php:233 includes/Settings.php:386
 msgid "The device token was successfully removed"
 msgstr "Токен уређаја је успешно уклоњен"
 
@@ -157,11 +157,11 @@ msgstr "ФЦМ Слање нотификације"
 msgid "Subscriptions"
 msgstr "Претплате"
 
-#: includes/Settings.php:76 includes/Settings.php:77 includes/Settings.php:511
+#: includes/Settings.php:76 includes/Settings.php:77 includes/Settings.php:529
 msgid "Settings"
 msgstr "Подешавање"
 
-#: includes/Settings.php:85 includes/Settings.php:515
+#: includes/Settings.php:85 includes/Settings.php:533
 #: push-notification-fcm.php:91
 msgid "Devices"
 msgstr "Уређаји"
@@ -227,7 +227,20 @@ msgstr "Фиребасе конзола"
 msgid "Important settings for this plugin."
 msgstr "Важна подешавања за овај додатак."
 
-#: includes/Settings.php:297
+#: includes/Settings.php:296
+#, php-format
+msgid ""
+"If you want, you can %s. After the change it is important to change the "
+"newly generated key in your application."
+msgstr ""
+"Ако желите, можете %s. Након промене важно је да промените новогенерисани "
+"кључ у вашој апликацији."
+
+#: includes/Settings.php:300
+msgid "Change REST API Key"
+msgstr "променити РЕСТ АПИ кључ"
+
+#: includes/Settings.php:315
 msgid ""
 "In order to be able to send push notifications, you need to record the "
 "device ID in the site's database. Therefore, you have 2 REST endpoints to "
@@ -239,19 +252,19 @@ msgstr ""
 "претплатите на ИД уређаја током инсталације апликације или да откажете "
 "претплату на ИД уређаја током брисања апликације."
 
-#: includes/Settings.php:321 includes/Settings.php:356
+#: includes/Settings.php:339 includes/Settings.php:374
 msgid "Parameters:"
 msgstr "Параметри:"
 
-#: includes/Settings.php:322 includes/Settings.php:357
+#: includes/Settings.php:340 includes/Settings.php:375
 msgid "(required)"
 msgstr "(обавезно)"
 
-#: includes/Settings.php:323
+#: includes/Settings.php:341
 msgid "(optional)"
 msgstr "(опционо)"
 
-#: includes/Settings.php:324
+#: includes/Settings.php:342
 msgid ""
 "This would be the category in which the device is registered, if there is no "
 "category exists in WordPress it’ll be created automatically."
@@ -259,15 +272,15 @@ msgstr ""
 "Ово би била категорија у којој је уређај регистрован, ако у Вордпресу не "
 "постоји категорија, биће креирана аутоматски."
 
-#: includes/Settings.php:335 includes/Settings.php:367
+#: includes/Settings.php:353 includes/Settings.php:385
 msgid "Returns:"
 msgstr "Враћа:"
 
-#: includes/Settings.php:381
+#: includes/Settings.php:399
 msgid "Allow notifications in selected post types"
 msgstr "Дозволи обавештења у изабраним типовима постова"
 
-#: includes/Settings.php:489
+#: includes/Settings.php:507
 msgid "Donate"
 msgstr "Донирајте"
 
