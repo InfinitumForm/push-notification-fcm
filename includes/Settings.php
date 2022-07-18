@@ -270,6 +270,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 	public function input__rest_api_key () {
 		
 		$rest_api_key = self::get('rest_api_key');
+		
 		if( !$rest_api_key ) {
 			$sep = ['.',':','-', '_'];
 			$rest_api_key = join($sep[ mt_rand(0, count($sep)-1) ], [
@@ -279,11 +280,28 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 			]);
 		}
 		
+		$readonly = !empty($rest_api_key);
+		
 		printf(
-            '<input type="text" id="%1$s_rest_api_key" name="%1$s[rest_api_key]" value="%2$s" style="width:95%%; max-width:50%%; min-width:100px;" />',
+            '<input type="text" id="%1$s_rest_api_key" name="%1$s[rest_api_key]" value="%2$s" style="width:95%%; max-width:50%%; min-width:100px;"%3$s />',
             esc_attr( self::OPTION_NAME ),
-			esc_attr( $rest_api_key )
+			esc_attr( $rest_api_key ),
+			( $readonly ? ' readonly' : '' )
         );
+		
+		if( $readonly ) {
+			printf(
+				'<p>%s</p>',
+				sprintf(
+					__('If you want, you can %s. After the change it is important to change the newly generated key in your application.', 'fcmpn'),
+					sprintf(
+						'<a href="javascript:void(0);" onclick="document.getElementById(\'%1$s_rest_api_key\').readOnly = false;">%2$s</a>',
+						esc_attr( self::OPTION_NAME ),
+						__('Change REST API Key', 'fcmpn')
+					)
+				)
+			);
+		}
 	}
 	
 	
