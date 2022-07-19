@@ -522,6 +522,8 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 									$device_icon = 'WOS.png';
 								} else if( $device_name === 'aix' ) {
 									$device_icon = 'AIX.png';
+								} else if( $device_name === 'debian' ) {
+									$device_icon = 'DEB.png';
 								}
 								
 								if($device_icon) {
