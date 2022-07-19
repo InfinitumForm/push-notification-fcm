@@ -65,6 +65,15 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 			);
 		}
 		
+		if( 0 < ( $subscription = absint($_GET['subscription'] ?? 0) ) ) {
+			$query.=$wpdb->prepare(" AND `{$wpdb->posts}`.`ID` IN (
+				SELECT `object_id` FROM `{$wpdb->term_relationships}` AS `TR` 
+					INNER JOIN `{$wpdb->term_taxonomy}` AS `TT` ON `TR`.`term_taxonomy_id` = `TT`.`term_taxonomy_id`
+					INNER JOIN `{$wpdb->terms}` AS `T` ON `TT`.`term_id` = `T`.`term_id`
+				WHERE `TT`.`taxonomy` = 'fcmpn-subscriptions' AND `T`.`term_id` = %d
+			)", $subscription);
+		}
+		
 		$count['enabled'] = absint( $wpdb->get_var( $query . " AND `{$wpdb->posts}`.`post_status` = 'private'" ) );
 		$count['disabled'] = absint( $wpdb->get_var( $query . " AND `{$wpdb->posts}`.`post_status` = 'trash'" ) );
 
@@ -170,6 +179,15 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 				'%'.$wpdb->esc_like($s).'%',
 				'%'.$wpdb->esc_like($s).'%'
 			);
+		}
+		
+		if( 0 < ( $subscription = absint($_GET['subscription'] ?? 0) ) ) {
+			$query.=$wpdb->prepare(" AND `{$wpdb->posts}`.`ID` IN (
+				SELECT `object_id` FROM `{$wpdb->term_relationships}` AS `TR` 
+					INNER JOIN `{$wpdb->term_taxonomy}` AS `TT` ON `TR`.`term_taxonomy_id` = `TT`.`term_taxonomy_id`
+					INNER JOIN `{$wpdb->terms}` AS `T` ON `TT`.`term_id` = `T`.`term_id`
+				WHERE `TT`.`taxonomy` = 'fcmpn-subscriptions' AND `T`.`term_id` = %d
+			)", $subscription);
 		}
 		
 		if($filter = sanitize_text_field($_GET['filter'] ?? '')) {

@@ -15,6 +15,38 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		add_filter( 'plugin_row_meta', [&$this, 'action_links'], 10, 2 );
 		add_filter( 'plugin_action_links_' . plugin_basename(FCMPN_FILE), [&$this, 'plugin_action_links'] );
 		add_filter( 'set-screen-option', [&$this, 'set_screen_option'], 10, 3 );
+		add_filter( "manage_edit-fcmpn-subscriptions_columns", [&$this, 'custom_column_header'], 30, 1);
+		add_action( "manage_fcmpn-subscriptions_custom_column", [&$this, 'custom_column_content'], 10, 3);
+	}
+	
+	public function custom_column_header ( $columns ) {
+		if( isset($columns['posts']) ) {
+			unset($columns['posts']);
+			$columns['devices'] = __( 'Devices', 'fcmpn' );
+		}
+		return $columns;
+	}
+	
+	function custom_column_content( $value, $column_name, $term_id ) {
+		if ($column_name === 'devices') {
+			global $wpdb;
+			
+			if( $fcmpn_devices = $wpdb->get_var( $wpdb->prepare("
+				SELECT COUNT(1) FROM `{$wpdb->posts}`
+				WHERE `{$wpdb->posts}`.`post_type` = 'fcmpn-devices' AND `{$wpdb->posts}`.`ID` IN (
+					SELECT `object_id` FROM `{$wpdb->term_relationships}` AS `TR` 
+						INNER JOIN `{$wpdb->term_taxonomy}` AS `TT` ON `TR`.`term_taxonomy_id` = `TT`.`term_taxonomy_id`
+						INNER JOIN `{$wpdb->terms}` AS `T` ON `TT`.`term_id` = `T`.`term_id`
+					WHERE `TT`.`taxonomy` = 'fcmpn-subscriptions' AND `T`.`term_id` = %d
+				)
+			", $term_id)) ) {
+				echo '<a href="' . admin_url('/admin.php?page=push-notification-fcm&subscription=' . $term_id) . '">'
+					. $fcmpn_devices 
+				. '</a>';
+			} else {
+				echo 0;
+			}
+		}
 	}
 	
 	/*
