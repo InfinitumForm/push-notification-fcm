@@ -17,8 +17,22 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		add_filter( 'set-screen-option', [&$this, 'set_screen_option'], 10, 3 );
 		add_filter( "manage_edit-fcmpn-subscriptions_columns", [&$this, 'custom_column_header'], 30, 1);
 		add_action( "manage_fcmpn-subscriptions_custom_column", [&$this, 'custom_column_content'], 10, 3);
+	//	add_action( 'admin_enqueue_scripts', [&$this, 'admin_enqueue_scripts'], 10, 1 );
 	}
 	
+	/**
+	 * Enqueue a script in the WordPress admin
+	 */
+	public function admin_enqueue_scripts( $hook ) {
+
+		if ( 'toplevel_page_push-notification-fcm' !== $hook ) {
+			return;
+		}
+	}
+	
+	/*
+     * Add custom column
+	 */
 	public function custom_column_header ( $columns ) {
 		if( isset($columns['posts']) ) {
 			unset($columns['posts']);
@@ -27,6 +41,9 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		return $columns;
 	}
 	
+	/*
+     * Add custom column value
+	 */
 	function custom_column_content( $value, $column_name, $term_id ) {
 		if ($column_name === 'devices') {
 			global $wpdb;

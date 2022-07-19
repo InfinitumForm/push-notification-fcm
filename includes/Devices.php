@@ -490,10 +490,50 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 									' - '
 								);
 							} else {
+								$device_name = trim(strtolower($rec->device_name));
+								
+								// @source: https://github.com/EgoistDeveloper/operating-system-logos
+								$device_icon = NULL;
+								if( in_array($device_name, ['android']) ) {
+									$device_icon = 'AND.png';
+								} else if( in_array($device_name, ['ios', 'apple', 'iphone']) ) {
+									$device_icon = 'IOS.png';
+									if($device_name == 'ios') {
+										$rec->device_name = 'iOS';
+									}
+								} else if( in_array($device_name, ['tvos']) ) {
+									$device_icon = 'ATV.png';
+								} else if( strpos($device_name, 'chrome') !== false ) {
+									$device_icon = 'COS.png';
+								} else if( strpos($device_name, 'firefox') !== false ) {
+									$device_icon = 'FOS.png';
+								} else if( strpos($device_name, 'windows') !== false ) {
+									$device_icon = 'WIN.png';
+								} else if(
+									strpos($device_name, 'linux') !== false 
+									|| strpos($device_name, 'gnu') !== false
+								) {
+									$device_icon = 'LIN.png';
+								} else if( strpos($device_name, 'ubuntu') !== false ) {
+									$device_icon = 'UBT.png';
+								} else if( strpos($device_name, 'xbox') !== false ) {
+									$device_icon = 'XBX.png';
+								} else if( strpos($device_name, 'webos') !== false ) {
+									$device_icon = 'WOS.png';
+								} else if( $device_name === 'aix' ) {
+									$device_icon = 'AIX.png';
+								}
+								
+								if($device_icon) {
+									$device_name = '<img src="' . FCMPN_URL . '/assets/16x16/' . $device_icon . '" alt="' . esc_attr($rec->device_name) . '" style="float:left; margin:1px 5px 0 0;"> <span>' . esc_html($rec->device_name) . '</span>';
+								} else {
+									$device_name = esc_html($rec->device_name);
+								}
+								
 								printf(
 									'<td %1$s>%2$s</td>',
 									$attributes,
-									esc_html($rec->device_name)
+									$device_name
 								);
 							}
 						break;
