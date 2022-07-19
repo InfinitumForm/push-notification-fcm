@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Firebase Push Notification\n"
-"POT-Creation-Date: 2022-07-18 12:55+0200\n"
-"PO-Revision-Date: 2022-07-18 13:03+0200\n"
+"POT-Creation-Date: 2022-07-19 12:32+0200\n"
+"PO-Revision-Date: 2022-07-19 12:32+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sr_RS\n"
@@ -35,64 +35,64 @@ msgstr "Претражи уређаје"
 msgid "Firebase Push Notification"
 msgstr "\"Firebase\" - Слање нотификације"
 
-#: includes/Devices.php:77
+#: includes/Devices.php:86
 msgid "All"
 msgstr "Сви"
 
-#: includes/Devices.php:82
+#: includes/Devices.php:91
 msgid "Enabled"
 msgstr "Омогућени"
 
-#: includes/Devices.php:88 includes/Devices.php:421
+#: includes/Devices.php:97 includes/Devices.php:439
 msgid "Disabled"
 msgstr "Онемогућен"
 
-#: includes/Devices.php:255
+#: includes/Devices.php:273
 msgid "Enable Device"
 msgstr "Омогући уређај"
 
-#: includes/Devices.php:256
+#: includes/Devices.php:274
 msgid "Disable Device"
 msgstr "Онемогући уређај"
 
-#: includes/Devices.php:257
+#: includes/Devices.php:275
 msgid "Delete"
 msgstr "Избришите"
 
-#: includes/Devices.php:274
+#: includes/Devices.php:292
 msgid "Nope! Security check failed!"
 msgstr "Стани! Сигурносна провера није прошла!"
 
-#: includes/Devices.php:337
+#: includes/Devices.php:355
 msgid "Device UUID"
 msgstr "УУИД уређаја"
 
-#: includes/Devices.php:338
+#: includes/Devices.php:356
 msgid "Device Key"
 msgstr "Кључ уређаја"
 
-#: includes/Devices.php:339 push-notification-fcm.php:129
+#: includes/Devices.php:357 push-notification-fcm.php:129
 #: push-notification-fcm.php:130 push-notification-fcm.php:144
 msgid "Subscription"
 msgstr "Пријава"
 
-#: includes/Devices.php:340
+#: includes/Devices.php:358
 msgid "Device Name"
 msgstr "Име уређаја"
 
-#: includes/Devices.php:341
+#: includes/Devices.php:359
 msgid "OS Version"
 msgstr "Верзија система"
 
-#: includes/Devices.php:342
+#: includes/Devices.php:360
 msgid "Subscribed"
 msgstr "Пријављен"
 
-#: includes/Devices.php:404
+#: includes/Devices.php:422
 msgid "Select Device"
 msgstr "Одабери уређај"
 
-#: includes/Devices.php:463
+#: includes/Devices.php:481
 msgid "undefined"
 msgstr "недефинисано"
 
@@ -128,7 +128,7 @@ msgstr "Постоји грешка у \"device-uuid\" који сте посл�
 msgid "Device token is not changed"
 msgstr "Токен уређаја није промењен"
 
-#: includes/REST.php:137 includes/REST.php:198 includes/Settings.php:354
+#: includes/REST.php:137 includes/REST.php:198 includes/Settings.php:403
 msgid "Device token registered"
 msgstr "Регистрован је токен уређаја"
 
@@ -140,7 +140,7 @@ msgstr "Није могуће претплатити се"
 msgid "Device is not saved"
 msgstr "Уређај није сачуван"
 
-#: includes/REST.php:233 includes/Settings.php:386
+#: includes/REST.php:233 includes/Settings.php:435
 msgid "The device token was successfully removed"
 msgstr "Токен уређаја је успешно уклоњен"
 
@@ -148,65 +148,66 @@ msgstr "Токен уређаја је успешно уклоњен"
 msgid "No device token found"
 msgstr "Није пронађен токен уређаја"
 
-#: includes/Settings.php:53 includes/Settings.php:54
-msgid "FCM Push Notification"
-msgstr "ФЦМ Слање нотификације"
-
-#: includes/Settings.php:66 includes/Settings.php:67
-#: push-notification-fcm.php:128 push-notification-fcm.php:143
-msgid "Subscriptions"
-msgstr "Претплате"
-
-#: includes/Settings.php:76 includes/Settings.php:77 includes/Settings.php:529
-msgid "Settings"
-msgstr "Подешавање"
-
-#: includes/Settings.php:85 includes/Settings.php:533
+#: includes/Settings.php:39 includes/Settings.php:134 includes/Settings.php:582
 #: push-notification-fcm.php:91
 msgid "Devices"
 msgstr "Уређаји"
 
-#: includes/Settings.php:108
+#: includes/Settings.php:102 includes/Settings.php:103
+msgid "FCM Push Notification"
+msgstr "ФЦМ Слање нотификације"
+
+#: includes/Settings.php:115 includes/Settings.php:116
+#: push-notification-fcm.php:128 push-notification-fcm.php:143
+msgid "Subscriptions"
+msgstr "Претплате"
+
+#: includes/Settings.php:125 includes/Settings.php:126
+#: includes/Settings.php:578
+msgid "Settings"
+msgstr "Подешавање"
+
+#: includes/Settings.php:157
 msgid "Devices per page"
 msgstr "Уређаја по страници"
 
-#: includes/Settings.php:144
+#: includes/Settings.php:193
 msgid "Firebase Server (API) Settings"
 msgstr "Подешавања Фиребасе сервера (АПИ)."
 
-#: includes/Settings.php:151
+#: includes/Settings.php:200
 msgid "Server (API) Key"
 msgstr "Кључ сервера (АПИ)."
 
-#: includes/Settings.php:161
+#: includes/Settings.php:210
 msgid "Plugin settings"
 msgstr "Подешавање додатка"
 
-#: includes/Settings.php:168
+#: includes/Settings.php:217
 msgid "REST API Key"
 msgstr "РЕСТ АПИ кључ"
 
-#: includes/Settings.php:178
+#: includes/Settings.php:227
 msgid "Enable in Post Types"
 msgstr "Омогући у Типовима постова"
 
-#: includes/Settings.php:185
+#: includes/Settings.php:234
 msgid "Choose Post Types"
 msgstr "Изаберите врсте постова"
 
-#: includes/Settings.php:195
+#: includes/Settings.php:244
 msgid "REST API Endpoints"
 msgstr "РЕСТ АПИ крајње тачке"
 
-#: includes/Settings.php:202
+#: includes/Settings.php:251
 msgid "Subscribe"
 msgstr "Претплатити се"
 
-#: includes/Settings.php:210
+#: includes/Settings.php:259
 msgid "Unsubscribe"
 msgstr "Отказивање претплате"
 
-#: includes/Settings.php:226
+#: includes/Settings.php:275
 msgid ""
 "An API key is a unique string that's used to route requests to your Firebase "
 "project when interacting with Firebase and Google services."
@@ -214,20 +215,20 @@ msgstr ""
 "АПИ кључ је јединствени стринг који се користи за усмеравање захтева ка "
 "вашем Фиребасе пројекту приликом интеракције са Фиребасе и Гоогле услугама."
 
-#: includes/Settings.php:248
+#: includes/Settings.php:297
 #, php-format
 msgid "Your api (server) key is located in the %s."
 msgstr "Ваш апи (сервер) кључ се налази у %s."
 
-#: includes/Settings.php:249
+#: includes/Settings.php:298
 msgid "Firebase console"
 msgstr "Фиребасе конзола"
 
-#: includes/Settings.php:263
+#: includes/Settings.php:312
 msgid "Important settings for this plugin."
 msgstr "Важна подешавања за овај додатак."
 
-#: includes/Settings.php:296
+#: includes/Settings.php:345
 #, php-format
 msgid ""
 "If you want, you can %s. After the change it is important to change the "
@@ -236,11 +237,11 @@ msgstr ""
 "Ако желите, можете %s. Након промене важно је да промените новогенерисани "
 "кључ у вашој апликацији."
 
-#: includes/Settings.php:300
+#: includes/Settings.php:349
 msgid "Change REST API Key"
 msgstr "променити РЕСТ АПИ кључ"
 
-#: includes/Settings.php:315
+#: includes/Settings.php:364
 msgid ""
 "In order to be able to send push notifications, you need to record the "
 "device ID in the site's database. Therefore, you have 2 REST endpoints to "
@@ -252,19 +253,19 @@ msgstr ""
 "претплатите на ИД уређаја током инсталације апликације или да откажете "
 "претплату на ИД уређаја током брисања апликације."
 
-#: includes/Settings.php:339 includes/Settings.php:374
+#: includes/Settings.php:388 includes/Settings.php:423
 msgid "Parameters:"
 msgstr "Параметри:"
 
-#: includes/Settings.php:340 includes/Settings.php:375
+#: includes/Settings.php:389 includes/Settings.php:424
 msgid "(required)"
 msgstr "(обавезно)"
 
-#: includes/Settings.php:341
+#: includes/Settings.php:390
 msgid "(optional)"
 msgstr "(опционо)"
 
-#: includes/Settings.php:342
+#: includes/Settings.php:391
 msgid ""
 "This would be the category in which the device is registered, if there is no "
 "category exists in WordPress it’ll be created automatically."
@@ -272,15 +273,15 @@ msgstr ""
 "Ово би била категорија у којој је уређај регистрован, ако у Вордпресу не "
 "постоји категорија, биће креирана аутоматски."
 
-#: includes/Settings.php:353 includes/Settings.php:385
+#: includes/Settings.php:402 includes/Settings.php:434
 msgid "Returns:"
 msgstr "Враћа:"
 
-#: includes/Settings.php:399
+#: includes/Settings.php:448
 msgid "Allow notifications in selected post types"
 msgstr "Дозволи обавештења у изабраним типовима постова"
 
-#: includes/Settings.php:507
+#: includes/Settings.php:556
 msgid "Donate"
 msgstr "Донирајте"
 
