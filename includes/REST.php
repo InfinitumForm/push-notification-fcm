@@ -119,6 +119,7 @@ if(!class_exists('FCMPN_REST')) : class FCMPN_REST {
 					'post_type'		=> 'fcmpn-devices',
 					'meta_input'	=> [
 						'_device_token' => $device_token,
+						'_device_name' => sanitize_text_field($request->get_param( 'device_name' ) ?? ''),
 						'_os_version' => sanitize_text_field($request->get_param( 'os_version' ) ?? '')
 					]
 				] );
