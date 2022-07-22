@@ -18,7 +18,6 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 		}
 	}
 	
-	
 	/*
      * Run the plugin
 	 */
@@ -64,7 +63,7 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 				
 				if( !empty($devices_id) ) {
 
-					$notification = apply_filters('fcmpm_api_send_notification', [
+					$notification = [
 						'title' => apply_filters('fcmpm_api_send_notification_post_title', $post->post_title),
 						'body' => mb_strimwidth(
 							strip_tags($post->post_content),
@@ -72,9 +71,19 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 							apply_filters('fcmpm_api_send_notification_post_content_max_length', 160),
 							'...'
 						),
-						'sound' => apply_filters('fcmpm_api_notification_sound', 'default'),
+						'sound' => FCMPN_Settings::get('notification_sound', 'default'),
 						'type' => 1
-					], $post_id, $post);
+					];
+					
+					if( $notification_icon = FCMPN_Settings::get('notification_icon') ) {
+						$notification['icon'] = $notification_icon;
+					}
+					
+					if( $notification_color = FCMPN_Settings::get('notification_color') ) {
+						$notification['color'] = $notification_color;
+					}
+					
+					$notification = apply_filters('fcmpm_api_send_notification', $notification, $post_id, $post);
 					
 					$data = [
 						'news_id' => $post_id
@@ -98,6 +107,8 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 	
 	/*
      * PRIVATE: Send notification
+	 *
+	 * wp_remote_request have some problems here and we must use pure cURL
 	 */
 	private function send_notification( $ids, $notification, $data) {
 		
@@ -109,7 +120,8 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 
 		$headers = array (
 			'Authorization: key=' . FCMPN_Settings::get('api_key'),
-			'Content-Type: application/json'
+			'Content-Type: application/json; charset=UTF-8',
+			'Accept: application/json'
 		);
 
 		$ch = curl_init ();
@@ -120,8 +132,24 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 		curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($fields) );
 
 		$result = curl_exec ( $ch );
+		
+		if( defined('WP_DEBUG') && WP_DEBUG ) {
+			$http_code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			if ( $http_code !== 200 ) {
+				$result = NULL;
+				error_log( sprintf(
+					__( 'FCMPN: An error occurred while communicating with the Firebase API. (HTTP code: %d)','fcmpn' ),
+					$http_code
+				), 0 );
+			}
+		}
+		
 		curl_close ( $ch );
 		
+		if( ! empty($result) ) {
+			$result = json_decode($result);
+		}
+			
 		return $result;
 	}
 	

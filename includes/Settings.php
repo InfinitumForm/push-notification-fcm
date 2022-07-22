@@ -17,16 +17,20 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		add_filter( 'set-screen-option', [&$this, 'set_screen_option'], 10, 3 );
 		add_filter( "manage_edit-fcmpn-subscriptions_columns", [&$this, 'custom_column_header'], 30, 1);
 		add_action( "manage_fcmpn-subscriptions_custom_column", [&$this, 'custom_column_content'], 10, 3);
-	//	add_action( 'admin_enqueue_scripts', [&$this, 'admin_enqueue_scripts'], 10, 1 );
+		add_action( 'admin_enqueue_scripts', [&$this, 'admin_enqueue_scripts'], 10, 1 );
 	}
 	
 	/**
 	 * Enqueue a script in the WordPress admin
 	 */
 	public function admin_enqueue_scripts( $hook ) {
-
-		if ( 'toplevel_page_push-notification-fcm' !== $hook ) {
-			return;
+		switch( $_GET['page'] ?? NULL ){
+			case 'push-notification-fcm':
+				break;
+			case 'push-notification-fcm-settings':
+				wp_enqueue_style( 'farbtastic' );
+				wp_enqueue_script( 'farbtastic' );
+				break;
 		}
 	}
 	
@@ -91,7 +95,46 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		.find('a')
 		.addClass('current');
 }(jQuery||window.jQuery));</script>
-		<?php endif; }
+		<?php endif; 
+		
+		if( in_array('push-notification-fcm-settings', [$_GET['page'] ?? NULL]) ) : ?>
+<script>(function($){
+	$(document).ready(function() {
+		
+		if( !(typeof $.farbtastic === 'function') ) {
+			return;
+		}
+		
+		$('#<?php echo esc_attr(self::OPTION_NAME); ?>_notification_color_picker')
+			.hide()
+			.farbtastic('#<?php echo esc_attr(self::OPTION_NAME); ?>_notification_color');
+			
+		var toggle_once_color_picker = function() {
+			$('#<?php echo esc_attr(self::OPTION_NAME); ?>_notification_color').one('click', function(){
+				if($(this).val() == '') {
+					$(this).val('#ffffff');
+				}
+				$('#<?php echo esc_attr(self::OPTION_NAME); ?>_notification_color_picker')
+					.slideToggle()
+					.append('<a href="#" class="fcm-close-color-picker"><?php esc_html_e( 'Remove color', 'fcmpn' ); ?></a>');
+			});
+		};
+		
+		toggle_once_color_picker();
+		
+		$(document).on('click', '.fcm-close-color-picker', function(e){
+			e.preventDefault();
+			$('#<?php echo esc_attr(self::OPTION_NAME); ?>_notification_color').val('').css({
+				backgroundColor : '',
+				color : ''
+			});
+			$('#<?php echo esc_attr(self::OPTION_NAME); ?>_notification_color_picker').slideToggle();
+			$(this).remove();
+			toggle_once_color_picker();
+		});
+	});
+}(jQuery||window.jQuery));</script>
+		<?php endif;  }
 	
 	/*
      * Register admin menus
@@ -240,6 +283,39 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		
 		
 		add_settings_section(
+            'pnfcm_plugin_utilities', // ID
+            __( 'Other settings', 'fcmpn' ), // Title
+            array( &$this, 'section__pnfcm_plugin_utilities' ), // Callback
+            'push-notification-fcm' // Page
+        );
+		
+		add_settings_field(
+            'notification_sound', // ID
+            __( 'Notification Sound', 'fcmpn' ), // Title 
+            array( $this, 'input__notification_sound' ), // Callback
+            'push-notification-fcm', // Page
+            'pnfcm_plugin_utilities' // Section           
+        );
+		
+		add_settings_field(
+            'notification_icon', // ID
+            __( 'Notification Icon', 'fcmpn' ), // Title 
+            array( $this, 'input__notification_icon' ), // Callback
+            'push-notification-fcm', // Page
+            'pnfcm_plugin_utilities' // Section           
+        );
+		
+		add_settings_field(
+            'notification_color', // ID
+            __( 'Notification Color', 'fcmpn' ), // Title 
+            array( $this, 'input__notification_color' ), // Callback
+            'push-notification-fcm', // Page
+            'pnfcm_plugin_utilities' // Section           
+        );
+		
+		
+		
+		add_settings_section(
             'pnfcm_plugin_rest_section', // ID
             __( 'REST API Endpoints', 'fcmpn' ), // Title
             array( &$this, 'section__pnfcm_plugin_rest_section' ), // Callback
@@ -261,6 +337,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
             'push-notification-fcm', // Page
             'pnfcm_plugin_rest_section' // Section           
         );
+		
 		
 	}
 	
@@ -361,7 +438,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 	public function section__pnfcm_plugin_rest_section () {
 		printf(
 			'<p>%s</p>',
-			__('In order to be able to send push notifications, you need to record the device ID in the site\'s database. Therefore, you have 2 REST endpoints to subscribe the device ID during app installation or unsubscribe the device ID during app deletion.', 'fcmpn')
+			__('In order to be able to send push notifications, you need to record the device ID and device token in the site\'s database. Therefore, you have 2 REST endpoints to subscribe the device when the application is installed or launched, and unsubscribe the device during app deletion.', 'fcmpn')
 		);
 	}
 	
@@ -480,6 +557,70 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 	
 	
 	/*
+     * Section: Firebase Server (API) Settings
+	 */
+	public function section__pnfcm_plugin_utilities () {
+		printf(
+			'<p>%s</p>',
+			__('These are special additional settings for your application.', 'fcmpn')
+		);
+	}
+	
+	/*
+     * Input: Notification sound
+	 */
+	public function input__notification_sound () {
+		
+		$notification_sound = self::get('notification_sound', 'default');
+
+		if( empty($notification_sound) ) {
+			$notification_sound = 'default';
+		}
+
+		printf(
+            '<input type="text" id="%1$s_notification_sound" name="%1$s[notification_sound]" value="%2$s" style="width:50%%; max-width:200px; min-width:100px;" /> %3$s<p>%4$s</p>',
+            esc_attr( self::OPTION_NAME ),
+			esc_attr( $notification_sound ),
+			__('(optional)', 'fcmpn'),
+			__('The sound to play when the device receives the notification. Supports <b>"default"</b> or the filename of a sound resource bundled in the app. Sound files must reside in <b>/res/raw/</b>.', 'fcmpn')
+        );
+	}
+	
+	/*
+     * Input: Notification icon
+	 */
+	public function input__notification_icon () {
+		
+		$notification_icon = self::get('notification_icon');
+
+		printf(
+            '<input type="text" id="%1$s_notification_icon" name="%1$s[notification_icon]" value="%2$s" style="width:50%%; max-width:200px; min-width:100px;" /> %3$s<p>%4$s</p>',
+            esc_attr( self::OPTION_NAME ),
+			esc_attr( $notification_icon ),
+			__('(optional)', 'fcmpn'),
+			__('The notification\'s icon. Sets the notification icon to <b>"myicon"</b> for drawable resource <b>myicon</b>. If you don\'t send this key in the request, FCM displays the launcher icon specified in your app manifest.', 'fcmpn')
+        );
+	}
+	
+	/*
+     * Input: Notification icon
+	 */
+	public function input__notification_color () {
+		
+		$notification_color = self::get('notification_color');
+
+		printf(
+            '<input type="text" id="%1$s_notification_color" name="%1$s[notification_color]" value="%2$s" style="width:50%%; max-width:100px; min-width:100px;" autocomplete="off" /> %3$s<p>%4$s</p><div id="%1$s_notification_color_picker" style="text-align:center;width:200px;"></div>',
+            esc_attr( self::OPTION_NAME ),
+			esc_attr( $notification_color ),
+			__('(optional)', 'fcmpn'),
+			__('The notification\'s icon color, expressed in <b>#rrggbb</b> format.', 'fcmpn')
+        );
+	}
+	
+	
+	
+	/*
      * Get single option
      */
     public static function get( $name = NULL, $default = NULL )
@@ -509,9 +650,12 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
     public function sanitize( $input )
     {
         $new_input = [
-			'api_key' => NULL,
-			'rest_api_key' => NULL,
-			'post_types' => []
+			'api_key' 				=> NULL,
+			'rest_api_key' 			=> NULL,
+			'notification_sound'	=> 'default',
+			'notification_icon' 	=> '',
+			'notification_color' 	=> '',
+			'post_types' 			=> []
 		];
 
 		if( isset($input['api_key']) ) {
@@ -534,6 +678,18 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 			} else {
 				$new_input['rest_api_key'] = sanitize_text_field($input['rest_api_key']);
 			}
+		}
+		
+		if( !empty($input['notification_sound']) ) {
+			$new_input['notification_sound'] = sanitize_text_field($input['notification_sound']);
+		}
+		
+		if( !empty($input['notification_icon']) ) {
+			$new_input['notification_icon'] = sanitize_text_field($input['notification_icon']);
+		}
+		
+		if( !empty($input['notification_color']) ) {
+			$new_input['notification_color'] = sanitize_text_field($input['notification_color']);
 		}
 		
 		if( isset($input['post_types']) ) {
