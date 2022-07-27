@@ -72,6 +72,7 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 		self::include_once( FCMPN_INC . '/API.php' );
 		
 		add_action( 'init', [&$this, 'init'] );
+		add_action( 'plugins_loaded', [ &$this, 'register_textdomain' ], 10, 0 );
 		
 		FCMPN_Settings::instance();
 		FCMPN_REST::instance();
@@ -149,6 +150,42 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 					'hierarchical'		=> false
 				]
 			);
+		}
+	}
+	
+	/*
+	 * Register site translations
+	 */
+	public function register_textdomain() {		
+		// Get locale
+		$locale = apply_filters( 'fcmpn_locale', get_locale(), 'fcmpn' );
+		
+		// We need standard file
+		$mofile = sprintf( '%s-%s.mo', 'fcmpn', $locale );
+		
+		// Check first inside `/wp-content/languages/plugins`
+		$domain_path = path_join( WP_LANG_DIR, 'plugins' );
+		$loaded = load_textdomain( 'fcmpn', path_join( $domain_path, $mofile ) );
+		
+		// Or inside `/wp-content/languages`
+		if ( ! $loaded ) {
+			$loaded = load_textdomain( 'fcmpn', path_join( WP_LANG_DIR, $mofile ) );
+		}
+		
+		// Or inside `/wp-content/plugin/push-notification-fcm/languages`
+		if ( ! $loaded ) {
+			$domain_path = 'push-notification-fcm' . DIRECTORY_SEPARATOR . 'languages';
+			$loaded = load_textdomain( 'fcmpn', path_join( $domain_path, $mofile ) );
+			
+			// Or load with only locale without prefix
+			if ( ! $loaded ) {
+				$loaded = load_textdomain( 'fcmpn', path_join( $domain_path, "{$locale}.mo" ) );
+			}
+
+			// Or old fashion way
+			if ( ! $loaded && function_exists('load_plugin_textdomain') ) {
+				load_plugin_textdomain( 'fcmpn', false, $domain_path );
+			}
 		}
 	}
 
