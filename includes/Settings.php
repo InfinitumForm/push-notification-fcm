@@ -18,7 +18,75 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		add_filter( "manage_edit-fcmpn-subscriptions_columns", [&$this, 'custom_column_header'], 30, 1);
 		add_action( "manage_fcmpn-subscriptions_custom_column", [&$this, 'custom_column_content'], 10, 3);
 		add_action( 'admin_enqueue_scripts', [&$this, 'admin_enqueue_scripts'], 10, 1 );
+		
+		add_action( 'fcmpn-settings-sidebar', [&$this, 'sidebar_settings__related_plugins'], 10, 0 );
 	}
+	
+	public function sidebar_settings__related_plugins () { ?>
+<div class="postbox" id="fcmpn-related-plugins">
+	<h3 class="hndle" style="margin-bottom:0;padding-bottom:0;"><span><?php _e('Recommended Plugins', 'fcmpn'); ?></span></h3><hr>
+	<div class="inside flex">
+
+		<table border="0" cellpadding="0" cellspacing="15">
+		<?php
+			$plugins = apply_filters('fcmpn-settings-sidebar-recommended-plugins', [
+				'cf-geoplugin',
+				'serbian-transliteration',
+				'easy-auto-reload',
+				'registar-nestalih'
+			]);
+			
+			foreach($plugins as $plugin) :
+				$plugin = self::plugin_info(
+					[
+						'active_installs' => true,
+						'rating' => true,
+						'icons' => true
+					],
+					$plugin
+				);
+				
+				$rating = floatval(5*($plugin->rating/100));
+			//	echo '<pre>', var_dump($plugin), '</pre>';
+		?>
+			<tr>
+				<td width="30%">
+					<a href="<?php echo esc_url($plugin->icons['1x']); ?>">
+						<img width="64" height="64" loading="lazy" class="img-responsive" srcset="<?php echo esc_url($plugin->icons['1x']); ?>, <?php echo esc_url($plugin->icons['2x']); ?> 2x" src="<?php echo esc_url($plugin->icons['1x']); ?>" />
+					</a>
+				</td>
+				<td>
+					<a href="//wordpress.org/plugins/<?php echo esc_attr($plugin->slug); ?>/" class="title"><?php echo esc_html( apply_filters('widget_title', $plugin->name) ); ?></a>
+					<?php if($plugin->active_installs > 10) : ?>
+						<br><span class="active-install"><?php
+							printf(
+								__('Active Installs: %s', 'fcmpn'),
+								'<b>+' . esc_html($plugin->active_installs) . '</b>'
+							);
+						?></span>
+					<?php else: ?>
+						<br><span class="active-install"><?php _e('Active Installs fewer than 10', 'fcmpn'); ?></span>
+					<?php endif; ?>
+					
+					<?php if($rating) : ?>
+						<br><span class="rating">
+						<?php
+							printf(
+								__('Rating: %s', 'fcmpn'),
+								'<b>+' . esc_html($rating) . '</b>'
+							);
+						?></span>
+					<?php else: ?>
+						<br><span class="rating"><?php _e('Not rated yet', 'fcmpn'); ?></span>
+					<?php endif; ?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+		</table>
+		
+	</div>
+</div>
+	<?php }
 	
 	/**
 	 * Enqueue a script in the WordPress admin
@@ -98,6 +166,23 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		<?php endif; 
 		
 		if( in_array('push-notification-fcm-settings', [$_GET['page'] ?? NULL]) ) : ?>
+<style>
+	#fcmpn-related-plugins .img-responsive {
+		display:block;
+		width: 100%;
+		height: auto;
+		max-width:100%;
+	}
+	#fcmpn-related-plugins .title{
+		font-size:1em;
+	}
+	#fcmpn-related-plugins .active-install,
+	#fcmpn-related-plugins .rating{
+		font-size:0.9em;
+		color: #555;
+		line-height: 0;
+	}
+</style>
 <script>(function($){
 	$(document).ready(function() {
 		
@@ -759,6 +844,74 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 			return substr(str_replace(['.',' ','_'],mt_rand(1000,9999),uniqid('t'.microtime())), 0, $length);
 		}
 	}
+	
+	/*
+	 * Return plugin informations
+	 * @return        array/object
+	 * @author        Ivijan-Stefan Stipic
+	*/
+	public static function plugin_info(array $fields = [], $slug = false, $force_cache = true) {		
+		$cache_name = 'fcmpn-plugin_info-' . md5(serialize($fields) . ($slug!==false ? $slug : 'push-notification-fcm'));
+		
+		if($plugin_data = get_transient($cache_name)) {
+			return $plugin_data;
+		}
+		
+		delete_transient($cache_name);
+		
+        if ( is_admin() ) {
+			if ( ! function_exists( 'plugins_api' ) ) {
+				include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+			}
+			/** Prepare our query */
+			//donate_link
+			//versions
+			$plugin_data = plugins_api( 'plugin_information', [
+				'slug' => ($slug!==false ? $slug : 'push-notification-fcm'),
+				'fields' => array_merge([
+					'active_installs' => false,           // rounded int
+					'added' => false,                     // date
+					'author' => false,                    // a href html
+					'author_block_count' => false,        // int
+					'author_block_rating' => false,       // int
+					'author_profile' => false,            // url
+					'banners' => false,                   // array( [low], [high] )
+					'compatibility' => false,             // empty array?
+					'contributors' => false,              // array( array( [profile], [avatar], [display_name] )
+					'description' => false,               // string
+					'donate_link' => false,               // url
+					'download_link' => false,             // url
+					'downloaded' => false,                // int
+					// 'group' => false,                  // n/a 
+					'homepage' => false,                  // url
+					'icons' => false,                     // array( [1x] url, [2x] url )
+					'last_updated' => false,              // datetime
+					'name' => false,                      // string
+					'num_ratings' => false,               // int
+					'rating' => false,                    // int
+					'ratings' => false,                   // array( [5..0] )
+					'requires' => false,                  // version string
+					'requires_php' => false,              // version string
+					// 'reviews' => false,                // n/a, part of 'sections'
+					'screenshots' => false,               // array( array( [src],  ) )
+					'sections' => false,                  // array( [description], [installation], [changelog], [reviews], ...)
+					'short_description' => false,         // string
+					'slug' => false,                      // string
+					'support_threads' => false,           // int
+					'support_threads_resolved' => false,  // int
+					'tags' => false,                      // array( )
+					'tested' => false,                    // version string
+					'version' => false,                   // version string
+					'versions' => false,                  // array( [version] url )
+				], $fields)
+			]);
+		 	
+			// Save into current cache		
+			set_transient($cache_name, $plugin_data, HOUR_IN_SECONDS);
+			
+			return $plugin_data;
+		}
+    }
 
 	/*
      * Run the plugin
