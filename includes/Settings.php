@@ -23,95 +23,6 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		add_action( 'fcmpn-settings-sidebar', [&$this, 'sidebar_settings__contributors'], 20, 0 );
 	}
 	
-	public function sidebar_settings__related_plugins () { ?>
-<div class="postbox" id="fcmpn-related-plugins">
-	<h3 class="hndle"><span><?php _e('Recommended Plugins', 'fcmpn'); ?></span></h3><hr>
-	<div class="inside flex">
-
-		<table border="0" cellpadding="0" cellspacing="15">
-		<?php
-			$plugins = apply_filters('fcmpn-settings-sidebar-recommended-plugins', [
-				'cf-geoplugin',
-				'serbian-transliteration',
-				'easy-auto-reload',
-				'registar-nestalih'
-			]);
-			
-			foreach($plugins as $plugin) :
-				$plugin = self::plugin_info(
-					[
-						'active_installs' => true,
-						'rating' => true,
-						'icons' => true
-					],
-					$plugin
-				);
-				
-				if( !isset($plugin->name) ) continue;
-				
-				$rating = floatval(5*(($plugin->rating ?? 0)/100));
-			//	echo '<pre>', var_dump($plugin), '</pre>';
-		?>
-			<tr>
-				<td width="30%">
-					<a href="<?php echo esc_url($plugin->icons['1x']); ?>">
-						<img width="64" height="64" loading="lazy" class="img-responsive" srcset="<?php echo esc_url($plugin->icons['1x']); ?>, <?php echo esc_url($plugin->icons['2x']); ?> 2x" src="<?php echo esc_url($plugin->icons['1x']); ?>" />
-					</a>
-				</td>
-				<td>
-					<a href="//wordpress.org/plugins/<?php echo esc_attr($plugin->slug); ?>/" class="title"><?php echo esc_html( apply_filters('widget_title', $plugin->name) ); ?></a>
-					<?php if($plugin->active_installs > 10) : ?>
-						<br><span class="active-install"><?php
-							printf(
-								__('Active Installs: %s', 'fcmpn'),
-								'<b>+' . esc_html($plugin->active_installs) . '</b>'
-							);
-						?></span>
-					<?php else: ?>
-						<br><span class="active-install"><?php _e('Active Installs fewer than 10', 'fcmpn'); ?></span>
-					<?php endif; ?>
-					
-					<?php if($rating) : ?>
-						<br><span class="rating">
-						<?php
-							printf(
-								__('Rating: %s', 'fcmpn'),
-								'<b>+' . esc_html($rating) . '</b>'
-							);
-						?></span>
-					<?php else: ?>
-						<br><span class="rating"><?php _e('Not rated yet', 'fcmpn'); ?></span>
-					<?php endif; ?>
-				</td>
-			</tr>
-		<?php endforeach; ?>
-		</table>
-		
-	</div>
-</div>
-	<?php }
-	
-	public function sidebar_settings__contributors () { ?>
-	<?php if($plugin_info = self::plugin_info(['contributors' => true, 'donate_link' => true], 'push-notification-fcm')) : if(!empty($plugin_info->contributors)) : ?>
-	<div class="postbox" id="fcmpn-contributors">
-		<h3 class="hndle"><span><?php _e('Contributors & Developers', 'fcmpn'); ?></span></h3><hr>
-		<div class="inside flex">
-			<?php foreach(($plugin_info->contributors ?? []) as $username => $info) : $info = (object)$info; ?>
-			<div class="contributor contributor-<?php echo $username; ?>" id="contributor-<?php echo $username; ?>">
-				<a href="<?php echo esc_url($info->profile); ?>" target="_blank">
-					<img src="<?php echo esc_url($info->avatar); ?>">
-					<h3><?php echo $info->display_name; ?></h3>
-				</a>
-			</div>
-			<?php endforeach; ?>
-		</div>
-		<div class="inside">
-			<?php printf('<p>%s</p>', sprintf(__('If you want to support our work and effort, if you have new ideas or want to improve the existing code, %s.', 'fcmpn'), '<a href="https://github.com/InfinitumForm/registar-nestalih" target="_blank">' . __('join our team', 'fcmpn') . '</a>')); ?>
-		</div>
-	</div>
-	<?php endif; endif; ?>
-	<?php }
-	
 	/**
 	 * Enqueue a script in the WordPress admin
 	 */
@@ -926,6 +837,101 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 			return $plugin_data;
 		}
     }
+	
+	/**
+	 * Add related plugins admin sidebar
+	 */
+	public function sidebar_settings__related_plugins () { ?>
+<div class="postbox" id="fcmpn-related-plugins">
+	<h3 class="hndle"><span><?php _e('Recommended Plugins', 'fcmpn'); ?></span></h3><hr>
+	<div class="inside flex">
+
+		<table border="0" cellpadding="0" cellspacing="15">
+		<?php
+			$plugins = apply_filters('fcmpn-settings-sidebar-recommended-plugins', [
+				'cf-geoplugin',
+				'serbian-transliteration',
+				'easy-auto-reload',
+				'registar-nestalih'
+			]);
+			
+			foreach($plugins as $plugin) :
+				$plugin = self::plugin_info(
+					[
+						'active_installs' => true,
+						'rating' => true,
+						'icons' => true
+					],
+					$plugin
+				);
+				
+				if( !isset($plugin->name) ) continue;
+				
+				$rating = floatval(5*(($plugin->rating ?? 0)/100));
+			//	echo '<pre>', var_dump($plugin), '</pre>';
+		?>
+			<tr>
+				<td width="30%">
+					<a href="<?php echo esc_url($plugin->icons['1x']); ?>">
+						<img width="64" height="64" loading="lazy" class="img-responsive" srcset="<?php echo esc_url($plugin->icons['1x']); ?>, <?php echo esc_url($plugin->icons['2x']); ?> 2x" src="<?php echo esc_url($plugin->icons['1x']); ?>" />
+					</a>
+				</td>
+				<td>
+					<a href="//wordpress.org/plugins/<?php echo esc_attr($plugin->slug); ?>/" class="title"><?php echo esc_html( apply_filters('widget_title', $plugin->name) ); ?></a>
+					<?php if($plugin->active_installs > 10) : ?>
+						<br><span class="active-install"><?php
+							printf(
+								__('Active Installs: %s', 'fcmpn'),
+								'<b>+' . esc_html($plugin->active_installs) . '</b>'
+							);
+						?></span>
+					<?php else: ?>
+						<br><span class="active-install"><?php _e('Active Installs fewer than 10', 'fcmpn'); ?></span>
+					<?php endif; ?>
+					
+					<?php if($rating) : ?>
+						<br><span class="rating">
+						<?php
+							printf(
+								__('Rating: %s', 'fcmpn'),
+								'<b>+' . esc_html($rating) . '</b>'
+							);
+						?></span>
+					<?php else: ?>
+						<br><span class="rating"><?php _e('Not rated yet', 'fcmpn'); ?></span>
+					<?php endif; ?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+		</table>
+		
+	</div>
+</div>
+	<?php }
+	
+	/**
+	 * Add contributor admin sidebar
+	 */
+	public function sidebar_settings__contributors () { ?>
+	<?php if($plugin_info = self::plugin_info(['contributors' => true, 'donate_link' => true], 'push-notification-fcm')) : if(!empty($plugin_info->contributors)) : ?>
+	<div class="postbox" id="fcmpn-contributors">
+		<h3 class="hndle"><span><?php _e('Contributors & Developers', 'fcmpn'); ?></span></h3><hr>
+		<div class="inside flex">
+			<?php foreach(($plugin_info->contributors ?? []) as $username => $info) : $info = (object)$info; ?>
+			<div class="contributor contributor-<?php echo esc_attr($username); ?>" id="contributor-<?php echo esc_attr($username); ?>">
+				<a href="<?php echo esc_url($info->profile); ?>" target="_blank">
+					<img src="<?php echo esc_url($info->avatar); ?>">
+					<h3><?php echo esc_html($info->display_name); ?></h3>
+				</a>
+			</div>
+			<?php endforeach; ?>
+		</div>
+		<div class="inside">
+			<?php printf('<p>%s</p>', sprintf(__('If you want to support our work and effort, if you have new ideas or want to improve the existing code, %s.', 'fcmpn'), '<a href="https://github.com/InfinitumForm/push-notification-fcm" target="_blank">' . __('join our team', 'fcmpn') . '</a>')); ?>
+		</div>
+	</div>
+	<?php endif; endif; ?>
+	<?php }
 
 	/*
      * Run the plugin
