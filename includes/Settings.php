@@ -20,11 +20,12 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		add_action( 'admin_enqueue_scripts', [&$this, 'admin_enqueue_scripts'], 10, 1 );
 		
 		add_action( 'fcmpn-settings-sidebar', [&$this, 'sidebar_settings__related_plugins'], 10, 0 );
+		add_action( 'fcmpn-settings-sidebar', [&$this, 'sidebar_settings__contributors'], 20, 0 );
 	}
 	
 	public function sidebar_settings__related_plugins () { ?>
 <div class="postbox" id="fcmpn-related-plugins">
-	<h3 class="hndle" style="margin-bottom:0;padding-bottom:0;"><span><?php _e('Recommended Plugins', 'fcmpn'); ?></span></h3><hr>
+	<h3 class="hndle"><span><?php _e('Recommended Plugins', 'fcmpn'); ?></span></h3><hr>
 	<div class="inside flex">
 
 		<table border="0" cellpadding="0" cellspacing="15">
@@ -46,7 +47,9 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 					$plugin
 				);
 				
-				$rating = floatval(5*($plugin->rating/100));
+				if( !isset($plugin->name) ) continue;
+				
+				$rating = floatval(5*(($plugin->rating ?? 0)/100));
 			//	echo '<pre>', var_dump($plugin), '</pre>';
 		?>
 			<tr>
@@ -88,6 +91,27 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 </div>
 	<?php }
 	
+	public function sidebar_settings__contributors () { ?>
+	<?php if($plugin_info = self::plugin_info(['contributors' => true, 'donate_link' => true], 'push-notification-fcm')) : if(!empty($plugin_info->contributors)) : ?>
+	<div class="postbox" id="fcmpn-contributors">
+		<h3 class="hndle"><span><?php _e('Contributors & Developers', 'fcmpn'); ?></span></h3><hr>
+		<div class="inside flex">
+			<?php foreach(($plugin_info->contributors ?? []) as $username => $info) : $info = (object)$info; ?>
+			<div class="contributor contributor-<?php echo $username; ?>" id="contributor-<?php echo $username; ?>">
+				<a href="<?php echo esc_url($info->profile); ?>" target="_blank">
+					<img src="<?php echo esc_url($info->avatar); ?>">
+					<h3><?php echo $info->display_name; ?></h3>
+				</a>
+			</div>
+			<?php endforeach; ?>
+		</div>
+		<div class="inside">
+			<?php printf('<p>%s</p>', sprintf(__('If you want to support our work and effort, if you have new ideas or want to improve the existing code, %s.', 'fcmpn'), '<a href="https://github.com/InfinitumForm/registar-nestalih" target="_blank">' . __('join our team', 'fcmpn') . '</a>')); ?>
+		</div>
+	</div>
+	<?php endif; endif; ?>
+	<?php }
+	
 	/**
 	 * Enqueue a script in the WordPress admin
 	 */
@@ -97,6 +121,13 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 				break;
 			case 'push-notification-fcm-settings':
 				wp_enqueue_style( 'farbtastic' );
+				wp_enqueue_style(
+					'fcmpn',
+					FCMPN_URL . '/assets/css/admin.css',
+					['farbtastic'],
+					'1.0.0'
+				);
+				
 				wp_enqueue_script( 'farbtastic' );
 				break;
 		}
@@ -166,23 +197,6 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 		<?php endif; 
 		
 		if( in_array('push-notification-fcm-settings', [$_GET['page'] ?? NULL]) ) : ?>
-<style>
-	#fcmpn-related-plugins .img-responsive {
-		display:block;
-		width: 100%;
-		height: auto;
-		max-width:100%;
-	}
-	#fcmpn-related-plugins .title{
-		font-size:1em;
-	}
-	#fcmpn-related-plugins .active-install,
-	#fcmpn-related-plugins .rating{
-		font-size:0.9em;
-		color: #555;
-		line-height: 0;
-	}
-</style>
 <script>(function($){
 	$(document).ready(function() {
 		

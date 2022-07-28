@@ -1,0 +1,61 @@
+#push-notification-fcm-settings #fcmpn-contributors .contributor a,
+#push-notification-fcm-settings #fcmpn-contributors .contributor a *{
+	text-decoration:none !important;
+	text-align:center;
+	border:none;
+	display:block;
+}
+
+#push-notification-fcm-settings #fcmpn-contributors .inside.flex{
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+
+#push-notification-fcm-settings #fcmpn-contributors .inside.flex .contributor{
+	flex: 0 0 50%;
+	max-width: 50%;
+	margin:24px 0 0 0;
+}
+
+#push-notification-fcm-settings #fcmpn-contributors .contributor+.contributor{
+	
+}
+
+#push-notification-fcm-settings #fcmpn-contributors .contributor h3{
+	padding:0;
+	margin:0;
+	font-size: 0.9em;
+}
+
+#push-notification-fcm-settings #fcmpn-contributors .contributor img{
+	dsplay:block;
+	margin:0 auto;
+	max-width:100%;
+}
+
+#push-notification-fcm-settings #fcmpn-related-plugins a {
+	text-decoration:none !important;
+	font-weight:600;
+}
+#push-notification-fcm-settings  #cfmpn-settings-sidebar .hndle {
+	margin-bottom:0;
+	padding-bottom:0;
+}
+
+#fcmpn-related-plugins .img-responsive {
+	display:block;
+	width: 100%;
+	height: auto;
+	max-width:100%;
+}
+#fcmpn-related-plugins .title{
+	font-size:1em;
+}
+#fcmpn-related-plugins .active-install,
+#fcmpn-related-plugins .rating{
+	font-size:0.9em;
+	color: #555;
+	line-height: 0;
+}
