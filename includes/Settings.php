@@ -50,7 +50,7 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
 	public function custom_column_header ( $columns ) {
 		if( isset($columns['posts']) ) {
 			unset($columns['posts']);
-			$columns['devices'] = __( 'Devices', 'fcmpn' );
+			$columns['devices'] = esc_html__( 'Devices', 'fcmpn' );
 		}
 		return $columns;
 	}
@@ -348,6 +348,13 @@ if(!class_exists('FCMPN_Settings')) : class FCMPN_Settings {
             'pnfcm_plugin_rest_section' // Section           
         );
 		
+		if( isset($_POST[self::OPTION_NAME]) && !empty($_POST[self::OPTION_NAME]) ) {
+			set_transient(
+				'update_option_' . self::OPTION_NAME . '_saved',
+				esc_html__( 'Saved successfully!', 'fcmpn' ),
+				MINUTE_IN_SECONDS
+			);
+		}
 		
 	}
 	
