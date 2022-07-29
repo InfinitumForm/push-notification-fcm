@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Push Notification FCM
  * Plugin URI:        https://wordpress.org/plugins/push-notification-fcm/
- * Description:       Plugin for Firebase Cloud Messaging (FCM) for iOS and Android when content is published or updated.
+ * Description:       Firebase Cloud Messaging (FCM) to iOS and Android when content is published or updated.
  * Version:           1.0.0
  * Author:            Ivijan-Stefan Stipić
  * Author URI:        https://profiles.wordpress.org/ivijanstefan/
@@ -73,6 +73,7 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 		
 		add_action( 'init', [&$this, 'init'] );
 		add_action( 'plugins_loaded', [ &$this, 'register_textdomain' ], 10, 0 );
+		register_deactivation_hook( FCMPN_FILE,  [ 'FCM_Push_Notification', 'register_plugin_deactivation' ] );
 		
 		FCMPN_Settings::instance();
 		FCMPN_REST::instance();
@@ -80,6 +81,20 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 		FCMPN_API::instance();
 	}
 	
+	/*
+     * On plugin Dectivation
+	 */
+	public static function register_plugin_deactivation () {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+		
+		// Reload textdomain on update
+		if ( is_textdomain_loaded( 'fcmpn' ) ) {
+			unload_textdomain( 'fcmpn' );
+		}
+		
+	}
 	
 	/*
      * initialize plugin functionality

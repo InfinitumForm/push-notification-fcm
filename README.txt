@@ -68,3 +68,7 @@ In order to be able to send push notifications, you need to record the device ID
 }
 `
 
+== Changelog ==
+
+= 1.0.0 =
+* First stabile version
