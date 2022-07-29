@@ -83,18 +83,18 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 				if($filter == NULL) {
 					echo ' class="current" aria-current="page"';
 				}
-			?>><?php _e('All', 'fcmpn'); ?> <span class="count">(<?php echo ($count['enabled']+$count['disabled']); ?>)</span></a> |</li>
+			?>><?php esc_html_e('All', 'fcmpn'); ?> <span class="count">(<?php echo ($count['enabled']+$count['disabled']); ?>)</span></a> |</li>
 			<li class="enabled"><a href="<?php echo add_query_arg('filter','enabled'); ?>"<?php
 				if($filter == 'enabled') {
 					echo ' class="current" aria-current="page"';
 				}
-			?>><?php _e('Enabled', 'fcmpn'); ?> <span class="count">(<?php echo $count['enabled']; ?>)</span></a> 
+			?>><?php esc_html_e('Enabled', 'fcmpn'); ?> <span class="count">(<?php echo $count['enabled']; ?>)</span></a> 
 			<?php if($count['disabled']) : ?>|</li>
 			<li class="disabled"><a href="<?php echo add_query_arg('filter','disabled'); ?>"<?php echo add_query_arg('filter','enabled'); ?>"<?php
 				if($filter == 'disabled') {
 					echo ' class="current" aria-current="page"';
 				}
-			?>><?php _e('Disabled', 'fcmpn'); ?> <span class="count">(<?php echo $count['disabled']; ?>)</span></a></li>
+			?>><?php esc_html_e('Disabled', 'fcmpn'); ?> <span class="count">(<?php echo $count['disabled']; ?>)</span></a></li>
 			<?php else : ?>
 			</li>
 			<?php endif; ?>
@@ -295,12 +295,10 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 
 		$action = $this->current_action();
 		
-		$checkboxes = ($_POST['bulk_devices_id'] ?? NULL);
-		
-		if( !empty($checkboxes) && is_array($checkboxes) ) {
-			
-			$checkboxes = array_map('absint', $checkboxes);
-			$checkboxes = array_filter($checkboxes);
+		if( isset($_POST['bulk_devices_id']) && !empty($_POST['bulk_devices_id']) && is_array($_POST['bulk_devices_id']) ) {
+			$checkboxes = array_map( 'sanitize_text_field', $_POST['bulk_devices_id'] );
+			$checkboxes = array_map( 'absint', $checkboxes );
+			$checkboxes = array_filter( $checkboxes );
 						
 			if( !empty($checkboxes) ) {
 				global $wpdb;
@@ -352,12 +350,12 @@ if (!class_exists('FCMPN_Devices_Table')): class FCMPN_Devices_Table extends WP_
 	{
 		return [
 			'cb'    => '<input type="checkbox">',
-			'device_uuid' => __('Device UUID', 'fcmpn'),
-			'devce_key' => __('Device Key', 'fcmpn'),
-			'subscription' => __('Subscription', 'fcmpn'),
-			'device_name' => __('Device Name', 'fcmpn'),
-			'os_version' => __('OS Version', 'fcmpn'),
-			'date' => __('Subscribed', 'fcmpn')
+			'device_uuid' => esc_html__('Device UUID', 'fcmpn'),
+			'devce_key' => esc_html__('Device Key', 'fcmpn'),
+			'subscription' => esc_html__('Subscription', 'fcmpn'),
+			'device_name' => esc_html__('Device Name', 'fcmpn'),
+			'os_version' => esc_html__('OS Version', 'fcmpn'),
+			'date' => esc_html__('Subscribed', 'fcmpn')
 		];
 	}
 	

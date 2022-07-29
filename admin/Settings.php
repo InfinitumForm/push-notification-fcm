@@ -1,5 +1,5 @@
 <div class="wrap" id="push-notification-fcm-settings">
-	<h1><?php _e('Firebase Push Notification', 'fcmpn'); ?></h1>
+	<h1><?php esc_html_e('Firebase Push Notification', 'fcmpn'); ?></h1>
 	<hr>
 	<div id="poststuff" class="metabox-holder has-right-sidebar">
 	

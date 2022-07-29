@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:       Firebase Push Notification
+ * Plugin Name:       Push Notification FCM
  * Plugin URI:        https://wordpress.org/plugins/push-notification-fcm/
- * Description:       Firebase Cloud Messaging (FCM) to iOS and Android when content is published or updated.
+ * Description:       Plugin for Firebase Cloud Messaging (FCM) for iOS and Android when content is published or updated.
  * Version:           1.0.0
  * Author:            Ivijan-Stefan Stipić
  * Author URI:        https://profiles.wordpress.org/ivijanstefan/
@@ -32,7 +32,7 @@
  */
  
 // If someone try to called this file directly via URL, abort.
-if ( ! defined( 'WPINC' ) ) { die( "Don't mess with us." ); }
+if ( ! defined( 'WPINC' ) ) { die( 'Don\'t mess with us.' ); }
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Define plugin file (changes not allowed)
@@ -89,22 +89,22 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 		if(!post_type_exists('fcmpn-devices')) {
 			register_post_type( 'fcmpn-devices', [
 				'labels'				=> [
-					'name'               		=> __( 'Devices','fcmpn' ),
-					'singular_name'      		=> __( 'Device','fcmpn' ),
-					'add_new'            		=> __( 'Add New Device','fcmpn'),
-					'add_new_item'       		=> __( "Add New Device",'fcmpn'),
-					'edit_item'          		=> __( "Edit Device",'fcmpn'),
-					'new_item'           		=> __( "New Device",'fcmpn'),
-					'view_item'          		=> __( "View Device",'fcmpn'),
-					'search_items'       		=> __( "Search Devices",'fcmpn'),
-					'not_found'          		=> __( 'No Device Found','fcmpn'),
-					'not_found_in_trash' 		=> __( 'No Device Found in Trash','fcmpn'),
+					'name'               		=> esc_attr__( 'Devices','fcmpn' ),
+					'singular_name'      		=> esc_attr__( 'Device','fcmpn' ),
+					'add_new'            		=> esc_attr__( 'Add New Device','fcmpn'),
+					'add_new_item'       		=> esc_attr__( "Add New Device",'fcmpn'),
+					'edit_item'          		=> esc_attr__( "Edit Device",'fcmpn'),
+					'new_item'           		=> esc_attr__( "New Device",'fcmpn'),
+					'view_item'          		=> esc_attr__( "View Device",'fcmpn'),
+					'search_items'       		=> esc_attr__( "Search Devices",'fcmpn'),
+					'not_found'          		=> esc_attr__( 'No Device Found','fcmpn'),
+					'not_found_in_trash' 		=> esc_attr__( 'No Device Found in Trash','fcmpn'),
 					'parent_item_colon'  		=> '',
-					'featured_image'	 		=> __('Device Image','fcmpn'),
-					'set_featured_image'		=> __('Select Device Image','fcmpn'),
-					'remove_featured_image'		=> __('Remove Device Image','fcmpn'),
-					'use_featured_image'		=> __('Use Device Image','fcmpn'),
-					'insert_into_item'			=> __('Insert Into Device','fcmpn')
+					'featured_image'	 		=> esc_attr__('Device Image','fcmpn'),
+					'set_featured_image'		=> esc_attr__('Select Device Image','fcmpn'),
+					'remove_featured_image'		=> esc_attr__('Remove Device Image','fcmpn'),
+					'use_featured_image'		=> esc_attr__('Use Device Image','fcmpn'),
+					'insert_into_item'			=> esc_attr__('Insert Into Device','fcmpn')
 				],
 				'public'            	=> false,
 				'exclude_from_search'	=> true,
@@ -126,23 +126,23 @@ if(!class_exists('FCM_Push_Notification')) : class FCM_Push_Notification {
 				'fcmpn-subscriptions', 'fcmpn-devices',
 				[
 					'labels'			=> [
-						'name' 					=> __('Subscriptions','fcmpn'),
-						'singular_name' 		=> __('Subscription','fcmpn'),
-						'menu_name' 			=> __('Subscription','fcmpn'),
-						'all_items' 			=> __('All Subscription','fcmpn'),
-						'edit_item' 			=> __('Edit Subscription','fcmpn'),
-						'view_item' 			=> __('View Subscription','fcmpn'),
-						'update_item' 			=> __('Update Subscription','fcmpn'),
-						'add_new_item' 			=> __('Add New Subscription','fcmpn'),
-						'new_item_name' 		=> __('New Subscription Name','fcmpn'),
-						'parent_item' 			=> __('Parent Subscription','fcmpn'),
-						'parent_item_colon' 	=> __('Parent Subscription','fcmpn'),
+						'name' 					=> esc_attr__('Subscriptions','fcmpn'),
+						'singular_name' 		=> esc_attr__('Subscription','fcmpn'),
+						'menu_name' 			=> esc_attr__('Subscription','fcmpn'),
+						'all_items' 			=> esc_attr__('All Subscription','fcmpn'),
+						'edit_item' 			=> esc_attr__('Edit Subscription','fcmpn'),
+						'view_item' 			=> esc_attr__('View Subscription','fcmpn'),
+						'update_item' 			=> esc_attr__('Update Subscription','fcmpn'),
+						'add_new_item' 			=> esc_attr__('Add New Subscription','fcmpn'),
+						'new_item_name' 		=> esc_attr__('New Subscription Name','fcmpn'),
+						'parent_item' 			=> esc_attr__('Parent Subscription','fcmpn'),
+						'parent_item_colon' 	=> esc_attr__('Parent Subscription','fcmpn'),
 					],
 					'hierarchical'		=> false,
 					'show_ui'			=> true,
 					'public'		 	=> false,
-					'label'          	=> __('Subscriptions','fcmpn'),
-					'singular_label' 	=> __('Subscription','fcmpn'),
+					'label'          	=> esc_attr__('Subscriptions','fcmpn'),
+					'singular_label' 	=> esc_attr__('Subscription','fcmpn'),
 					'rewrite'        	=> true,
 					'query_var'			=> false,
 					'show_tagcloud'		=> false,

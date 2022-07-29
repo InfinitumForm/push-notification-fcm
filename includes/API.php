@@ -117,40 +117,24 @@ if(!class_exists('FCMPN_API')) : class FCMPN_API {
 			'notification' => $notification,
 			'data' => $data
 		);
-
-		$headers = array (
-			'Authorization: key=' . FCMPN_Settings::get('api_key'),
-			'Content-Type: application/json; charset=UTF-8',
-			'Accept: application/json'
-		);
-
-		$ch = curl_init ();
-		curl_setopt ( $ch, CURLOPT_URL, $this->url );
-		curl_setopt ( $ch, CURLOPT_POST, true );
-		curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
-		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($fields) );
-
-		$result = curl_exec ( $ch );
+		
+		$request = wp_remote_post( $this->url, [
+			'method' => 'POST',
+			'timeout' => 30,
+			'headers' => [
+				'Authorization' => 'key=' . FCMPN_Settings::get('api_key'),
+				'Content-Type' => 'application/json'
+			],
+			'body' => json_encode($fields),
+		] );
 		
 		if( defined('WP_DEBUG') && WP_DEBUG ) {
-			$http_code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			if ( $http_code !== 200 ) {
-				$result = NULL;
-				error_log( sprintf(
-					__( 'FCMPN: An error occurred while communicating with the Firebase API. (HTTP code: %d)','fcmpn' ),
-					$http_code
-				), 0 );
+			if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) != 200 ) {
+				error_log( print_r( $request, true ) );
 			}
 		}
-		
-		curl_close ( $ch );
-		
-		if( ! empty($result) ) {
-			$result = json_decode($result);
-		}
-			
-		return $result;
+
+		$response = wp_remote_retrieve_body( $request );
 	}
 	
 	/*

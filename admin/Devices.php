@@ -1,9 +1,9 @@
 <div class="wrap">
-	<h1><?php _e('All Registered Devices', 'fcmpn'); ?></h1>
+	<h1><?php esc_html_e('All Registered Devices', 'fcmpn'); ?></h1>
 	<?php FCMPN_Devices_Table::get_filter_links(); ?>
 	<form method="get" id="devices-table-search">
 		<p class="search-box">
-			<label class="screen-reader-text" for="post-search-input"><?php _e('Search Devices', 'fcmpn'); ?>:</label>
+			<label class="screen-reader-text" for="post-search-input"><?php esc_html_e('Search Devices', 'fcmpn'); ?>:</label>
 			<input type="search" id="post-search-input" name="s" value="<?php echo esc_attr( sanitize_text_field($_GET['s'] ?? '') ); ?>">
 			<input type="submit" id="search-submit" class="button" value="<?php esc_attr_e('Search Devices', 'fcmpn'); ?>">
 			<input type="hidden" value="<?php echo esc_attr( sanitize_text_field($_GET['page'] ?? '') ); ?>" name="page">
